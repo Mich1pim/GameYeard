@@ -8,10 +8,17 @@ public class Player : MonoBehaviour
 
     private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
+    private Animator animator;
+
+    private const string horizontal = "Horizontal";
+    private const string vertical = "Vertical";
+    private const string lastHorizontal = "LastHorizontal";
+    private const string lastVertical = "LastVertical";
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
     }
@@ -20,6 +27,15 @@ public class Player : MonoBehaviour
     private Vector2 GetMovementVector()
     {
         Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
+
+        animator.SetFloat(horizontal, inputVector.x);
+        animator.SetFloat(vertical, inputVector.y);
+
+        if (inputVector != Vector2.zero)
+        {
+            animator.SetFloat(lastHorizontal, inputVector.x);
+            animator.SetFloat(lastVertical, inputVector.y);
+        }
 
         return inputVector;
     }
