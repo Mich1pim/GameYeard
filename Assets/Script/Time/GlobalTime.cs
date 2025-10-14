@@ -6,6 +6,7 @@ public class GlobalTime : MonoBehaviour
 {
 
     public static GlobalTime Instance { get; private set; }
+    public GameObject shadow;
     public int minutes;
     public int hours;
     public int days;
@@ -32,9 +33,16 @@ public class GlobalTime : MonoBehaviour
         _Time();
         time.text = $"{hours:00}:{minutes:00}";
         if (!isNight)
+        {
             spotLight.enabled = false;
+            shadow.SetActive(true);
+        }
         else
+        {
             spotLight.enabled = true;
+            shadow.SetActive(false);
+        }
+            
     }
 
     public void _Time()
