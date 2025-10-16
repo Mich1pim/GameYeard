@@ -52,7 +52,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -63,10 +63,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -133,10 +133,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 16
-        width: 13
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -155,10 +155,10 @@ TextureImporter:
         serializedVersion: 2
         x: 16
         y: 16
-        width: 13
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -177,10 +177,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 14
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -199,10 +199,10 @@ TextureImporter:
         serializedVersion: 2
         x: 16
         y: 0
-        width: 13
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -219,12 +219,12 @@ TextureImporter:
       name: Free Chicken Sprites_4
       rect:
         serializedVersion: 2
-        x: 31
+        x: 32
         y: 0
-        width: 15
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -243,10 +243,10 @@ TextureImporter:
         serializedVersion: 2
         x: 48
         y: 0
-        width: 13
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -263,7 +263,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a6f4523824082a84e9919953ce571fcf
     internalID: 0
     vertices: []
     indices: 
@@ -271,7 +271,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.20000000298023225},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":9,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Free Chicken Sprites_0: 8560451000399327191
       Free Chicken Sprites_1: -172105496523427829
