@@ -9,6 +9,7 @@ public class AnimalWalk : MonoBehaviour
     [SerializeField] private float roamingMax = 7f;
     [SerializeField] private float roamingMin = 4f;
     [SerializeField] private float roamingTimeMax = 2f;
+    [SerializeField] private bool isRoaming = false;
 
     private NavMeshAgent navMeshAgent;
     private State state;
@@ -60,6 +61,12 @@ public class AnimalWalk : MonoBehaviour
     {
         roamPosition = GetRoamingPosition();
         navMeshAgent.SetDestination(roamPosition);
+        if (transform.position == roamPosition)
+        {
+            isRoaming = false;
+        }
+        else
+            isRoaming = true;
     }
 
     private UnityEngine.Vector3 GetRoamingPosition()
