@@ -12,13 +12,12 @@ public class AnimalWalk : MonoBehaviour
     [SerializeField] private bool isRoaming = false;
 
     private NavMeshAgent navMeshAgent;
+    private Animator animator;
     private State state;
     private float roamingTime;
 
-
     private UnityEngine.Vector3 roamPosition;
     private UnityEngine.Vector3 startPosition;
-
 
     private enum State
     {
@@ -29,6 +28,7 @@ public class AnimalWalk : MonoBehaviour
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
         navMeshAgent.updateRotation = false;
         navMeshAgent.updateUpAxis = false;
         state = startState;
@@ -37,6 +37,7 @@ public class AnimalWalk : MonoBehaviour
     private void Start()
     {
         startPosition = transform.position;
+        UpdateAnimator();
     }
 
     private void Update()
@@ -48,25 +49,39 @@ public class AnimalWalk : MonoBehaviour
                 break;
             case State.Roaming:
                 roamingTime -= Time.deltaTime;
-                if (roamingTime < 0)
+                if (HasReachedDestination())
                 {
-                    Roaming();
-                    roamingTime = roamingTimeMax;
+                    isRoaming = false;
+                    
+                    if (roamingTime < 0)
+                    {
+                        Roaming();
+                        roamingTime = roamingTimeMax;
+                    }
+                }
+                else
+                {
+                    isRoaming = true;
                 }
                 break;
         }
+
+        UpdateAnimator();
+        UpdateSpriteFlip();
+    }
+
+    private bool HasReachedDestination()
+    {
+        return !navMeshAgent.pathPending 
+                && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance 
+                && (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f);
     }
 
     private void Roaming()
     {
         roamPosition = GetRoamingPosition();
         navMeshAgent.SetDestination(roamPosition);
-        if (transform.position == roamPosition)
-        {
-            isRoaming = false;
-        }
-        else
-            isRoaming = true;
+        isRoaming = true;
     }
 
     private UnityEngine.Vector3 GetRoamingPosition()
@@ -77,5 +92,27 @@ public class AnimalWalk : MonoBehaviour
     private UnityEngine.Vector3 GetRandomDir()
     {
         return new UnityEngine.Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+    }
+
+    private void UpdateAnimator()
+    {
+        if (animator != null)
+        {
+            animator.SetBool("IsRoaming", isRoaming);
+        }
+    }
+    private void UpdateSpriteFlip()
+    {
+        if (navMeshAgent.hasPath && navMeshAgent.velocity != UnityEngine.Vector3.zero)
+        {
+            if (navMeshAgent.velocity.x < 0)
+            {
+                transform.rotation = UnityEngine.Quaternion.Euler(0f, -180f, 0f);
+            }
+            else if (navMeshAgent.velocity.x > 0)
+            {
+                transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
+            }
+        }
     }
 }

@@ -1,7 +1,8 @@
 using UnityEngine;
 
 public class Bash : MonoBehaviour
-{
+{ 
+    [Header("Player Settings")]
     public SpriteRenderer spriteRenderer;
     public Sprite[] textures;
     public float speedStage = 2f;

@@ -1,14 +1,18 @@
 using Mono.Cecil.Cil;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+    public int coin = 0;
     [SerializeField] private float moveSpeed = 1.0f;
 
     private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
     private Animator animator;
+    public TextMeshProUGUI coins;
 
     private const string horizontal = "Horizontal";
     private const string vertical = "Vertical";
@@ -17,6 +21,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerInputActions = new PlayerInputActions();
@@ -41,6 +46,8 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
+        coins.text = $"{coin} ";
+
         Vector2 inputVector = GetMovementVector();
 
         inputVector = inputVector.normalized;
