@@ -6,6 +6,7 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     public Item[] startItem;
+    [Header("settings")]
     public int maxStackSize = 64;
     public InventorySlot[] inventorySlots;
     public GameObject inventoryItemPrefab;
@@ -13,7 +14,14 @@ public class InventoryManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Start()
@@ -86,23 +94,23 @@ public class InventoryManager : MonoBehaviour
     {
         InventorySlot slot = inventorySlots[selectSlot];
         InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
-            if (itemInSlot != null)
+        if (itemInSlot != null)
+        {
+            Item item = itemInSlot.item;
+            if (use == true)
             {
-                Item item = itemInSlot.item;
-                if (use == true)
+                itemInSlot.count--;
+                if (itemInSlot.count <= 0)
                 {
-                    itemInSlot.count--;
-                    if (itemInSlot.count <= 0)
-                    {
-                        Destroy(itemInSlot.gameObject);
-                    }
-                    else
-                    {
-                        itemInSlot.RefreshCount();
-                    }
+                    Destroy(itemInSlot.gameObject);
                 }
-                return item;
+                else
+                {
+                    itemInSlot.RefreshCount();
+                }
             }
-            return null;
+            return item;
+        }
+        return null;
     }
 }
