@@ -16,26 +16,14 @@ public class Door : UsingAllObject
     protected override void Use()
     {
         base.Use();
+        isOpen = true;
         animator.SetTrigger("Open");
     }
 
     protected override void UnUse()
     {
         base.UnUse();
+        isOpen = false;
         animator.SetTrigger("Close");
-    }
-
-    public void OpenCloseDoor()
-    {
-        if (!isOpen)
-        {
-            Use();
-            isOpen = true;
-        }
-        else
-        {
-            UnUse();
-            isOpen = false;
-        }
     }
 }
