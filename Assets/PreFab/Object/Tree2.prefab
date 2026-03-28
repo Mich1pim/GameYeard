@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 4634389633665081928}
   - component: {fileID: 171275259356462643}
   - component: {fileID: 4197718277069756753}
+  - component: {fileID: 5971848189650137995}
   - component: {fileID: 5563493048558803195}
   m_Layer: 0
   m_Name: Tree2
-  m_TagString: Untagged
+  m_TagString: Axe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -36,6 +37,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &171275259356462643
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -81,6 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 8407099408872834079, guid: 85515b503afd53745a97761e984cd56f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -90,7 +93,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!70 &4197718277069756753
 CapsuleCollider2D:
@@ -129,6 +131,31 @@ CapsuleCollider2D:
   m_Offset: {x: 0.003160836, y: 0.010467374}
   m_Size: {x: 0.53940207, y: 0.19119856}
   m_Direction: 1
+--- !u!114 &5971848189650137995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7287987347226470018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4120598204a88046a155206d6044f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Extraction
+  damage: 2
+  health: 6
+  inventoryManager: {fileID: 7773755330343836053, guid: b386ea2f82694db448aab2e74f5bcd61, type: 3}
+  spawnPrefabCoin: {fileID: 8484565541269048068, guid: f2c8e85d67f22d447b5938a8af10ea1c, type: 3}
+  spawnPrefabLoot: {fileID: 2965910062730280880, guid: a215126dcbb46ad4d890da18b7a053d4, type: 3}
+  spawnRadius: 1.3
+  maxSpawnCount: 4
+  sprite: {fileID: 171275259356462643}
+  textures: []
+  isDying: 0
+  isRespawning: 0
+  respawnTimer: 0
+  respawnDelay: 10
 --- !u!114 &5563493048558803195
 MonoBehaviour:
   m_ObjectHideFlags: 0

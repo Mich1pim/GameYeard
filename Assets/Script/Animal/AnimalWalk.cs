@@ -41,34 +41,32 @@ public class AnimalWalk : MonoBehaviour
     }
 
     private void Update()
+{
+    switch (state)
     {
-        switch (state)
-        {
-            default:
-            case State.Idle:
-                break;
-            case State.Roaming:
-                roamingTime -= Time.deltaTime;
-                if (HasReachedDestination())
+        case State.Roaming:
+            roamingTime -= Time.deltaTime;
+            if (HasReachedDestination())
+            {
+                isRoaming = false;
+                
+                if (roamingTime < 0)
                 {
-                    isRoaming = false;
-                    
-                    if (roamingTime < 0)
-                    {
-                        Roaming();
-                        roamingTime = roamingTimeMax;
-                    }
+                    Roaming();
+                    roamingTime = roamingTimeMax;
                 }
-                else
-                {
-                    isRoaming = true;
-                }
-                break;
-        }
-
-        UpdateAnimator();
-        UpdateSpriteFlip();
+            }
+            else
+            {
+                isRoaming = true;
+            }
+            break;
     }
+
+    UpdateAnimator();
+    UpdateSpriteFlip(); // Этот метод теперь будет вызываться каждый кадр, 
+                        // но с порогом чувствительности проблема дрожания решена
+}
 
     private bool HasReachedDestination()
     {
@@ -102,17 +100,28 @@ public class AnimalWalk : MonoBehaviour
         }
     }
     private void UpdateSpriteFlip()
+{
+    if (navMeshAgent.hasPath && navMeshAgent.velocity != UnityEngine.Vector3.zero)
     {
-        if (navMeshAgent.hasPath && navMeshAgent.velocity != UnityEngine.Vector3.zero)
+        float velocityX = navMeshAgent.velocity.x;
+        float threshold = 0.1f;
+        
+        // Получаем текущий масштаб
+        UnityEngine.Vector3 localScale = transform.localScale;
+        
+        if (velocityX < -threshold)
         {
-            if (navMeshAgent.velocity.x < 0)
-            {
-                transform.rotation = UnityEngine.Quaternion.Euler(0f, -180f, 0f);
-            }
-            else if (navMeshAgent.velocity.x > 0)
-            {
-                transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
-            }
+            // Движение влево
+            localScale.x = -Mathf.Abs(localScale.x);
+            transform.localScale = localScale;
         }
+        else if (velocityX > threshold)
+        {
+            // Движение вправо
+            localScale.x = Mathf.Abs(localScale.x);
+            transform.localScale = localScale;
+        }
+        // Если velocity.x близка к нулю, не меняем масштаб
     }
+}
 }

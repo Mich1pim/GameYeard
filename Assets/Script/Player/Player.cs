@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
     public int coin = 0;
-    [SerializeField] private float moveSpeed = 1.0f;
+    public float moveSpeed = 1.0f;
 
     private PlayerInputActions playerInputActions;
     private Rigidbody2D rb;
@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
         playerInputActions.Enable();
     }
 
+    public void IsTool()
+    {
+        moveSpeed = 0;
+    }
 
     private Vector2 GetMovementVector()
     {

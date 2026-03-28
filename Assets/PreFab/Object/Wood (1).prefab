@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8226279704818182741
+--- !u!1 &2965910062730280880
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6295210940305829535}
-  - component: {fileID: 1544103408943362788}
-  - component: {fileID: 3264255023325943174}
-  - component: {fileID: 5468129545983165723}
-  - component: {fileID: 6501160866442581036}
+  - component: {fileID: 3843444937191657728}
+  - component: {fileID: 8243547718428336634}
+  - component: {fileID: 5005717248834369007}
+  - component: {fileID: 4306995894274857857}
   m_Layer: 0
-  m_Name: Tree
-  m_TagString: Axe
+  m_Name: Wood (1)
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &6295210940305829535
+--- !u!4 &3843444937191657728
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8226279704818182741}
+  m_GameObject: {fileID: 2965910062730280880}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.06691003, y: 1.34262, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.428, y: -14.2141, z: 0}
+  m_LocalScale: {x: 0.8, y: 0.75926805, z: 0.861141}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1544103408943362788
+--- !u!212 &8243547718428336634
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8226279704818182741}
+  m_GameObject: {fileID: 2965910062730280880}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -82,25 +81,39 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4483405589367954294, guid: 85515b503afd53745a97761e984cd56f, type: 3}
+  m_Sprite: {fileID: 6134250156721728216, guid: 062d078803e610346b31eb8879185a1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.26, y: 0.33}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 1
---- !u!70 &3264255023325943174
-CapsuleCollider2D:
+  m_SpriteSortPoint: 0
+--- !u!114 &5005717248834369007
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8226279704818182741}
+  m_GameObject: {fileID: 2965910062730280880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40290c1029140d244abcad46d9986f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Looting
+  inventoryManager: {fileID: 0}
+  itemToPickUp: {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
+--- !u!60 &4306995894274857857
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965910062730280880}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -124,51 +137,28 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.003160836, y: 0.010467374}
-  m_Size: {x: 0.53940207, y: 0.19119856}
-  m_Direction: 1
---- !u!114 &5468129545983165723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8226279704818182741}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4120598204a88046a155206d6044f9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Extraction
-  damage: 2
-  health: 6
-  inventoryManager: {fileID: 7773755330343836053, guid: b386ea2f82694db448aab2e74f5bcd61, type: 3}
-  spawnPrefabCoin: {fileID: 8484565541269048068, guid: f2c8e85d67f22d447b5938a8af10ea1c, type: 3}
-  spawnPrefabLoot: {fileID: 2965910062730280880, guid: a215126dcbb46ad4d890da18b7a053d4, type: 3}
-  spawnRadius: 1.3
-  maxSpawnCount: 4
-  sprite: {fileID: 1544103408943362788}
-  textures: []
-  isDying: 0
-  isRespawning: 0
-  respawnTimer: 0
-  respawnDelay: 10
---- !u!114 &6501160866442581036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8226279704818182741}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fa0352a4d56abd42ad2fc69deb72448, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NavMeshPlus::NavMeshPlus.Components.NavMeshModifierVolume
-  m_Size: {x: 0.5344565, y: 0.1880548, z: 4}
-  m_Center: {x: 0.0070718527, y: 0.010152131, z: 0}
-  m_Area: 1
-  m_AffectedAgents: ffffffff
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.25, y: 0.5}
+      - {x: -0.5, y: 0.25}
+      - {x: -0.5, y: -0.0625}
+      - {x: -0.0625, y: -0.5}
+      - {x: 0.25, y: -0.5}
+      - {x: 0.5, y: -0.25}
+      - {x: 0.5, y: 0.0625}
+      - {x: 0.0625, y: 0.5}
+  m_UseDelaunayMesh: 0
