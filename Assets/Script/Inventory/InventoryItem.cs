@@ -10,12 +10,16 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [Header("UI")]
     public Image image;
     public TextMeshProUGUI countText;
+
     [HideInInspector] public Item item;
     [HideInInspector] public int count = 1;
     [HideInInspector] public Transform parentAfterDrag;
 
     private RectTransform rectTransform;
     private Canvas parentCanvas;
+
+    [HideInInspector] public bool isRightClickDrag = false;
+    [HideInInspector] public bool dropHandled = false;
 
     void Awake()
     {
@@ -45,6 +49,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        isRightClickDrag = (eventData.button == PointerEventData.InputButton.Right);
+        dropHandled = false;
+
         parentCanvas = GetComponentInParent<Canvas>();
         if (parentCanvas == null)
             parentCanvas = FindObjectOfType<Canvas>();
@@ -52,11 +59,11 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
         transform.SetParent(parentCanvas.transform, true);
-        
+
         rectTransform.pivot = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        
+
         transform.SetAsLastSibling();
     }
 
@@ -75,22 +82,42 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        image.raycastTarget = true;
-        
+        // Если объект был уничтожен во время дропа — выходим
+        if (this == null || gameObject == null) return;
+
+        if (isRightClickDrag && dropHandled)
+        {
+            // Восстанавливаем исходный объект (если он ещё существует)
+            if (image != null) image.raycastTarget = true;
+            if (parentAfterDrag != null)
+            {
+                transform.SetParent(parentAfterDrag, false);
+                rectTransform.anchoredPosition = Vector2.zero;
+                rectTransform.localScale = Vector3.one;
+            }
+            isRightClickDrag = false;
+            dropHandled = false;
+            return;
+        }
+
+        // Обычный дроп (левая кнопка)
+        if (image != null) image.raycastTarget = true;
         if (parentAfterDrag != null)
         {
             transform.SetParent(parentAfterDrag, false);
             rectTransform.anchoredPosition = Vector2.zero;
             rectTransform.localScale = Vector3.one;
         }
+        isRightClickDrag = false;
+        dropHandled = false;
     }
 
     public bool CanMergeWith(InventoryItem otherItem)
     {
-        return item != null && 
-            otherItem != null && 
-            item == otherItem.item && 
-            item.stackable && 
+        return item != null &&
+            otherItem != null &&
+            item == otherItem.item &&
+            item.stackable &&
             count < InventoryManager.Instance.maxStackSize;
     }
 
@@ -107,7 +134,6 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
         else
         {
-            
             count = maxStack;
             otherItem.count = totalCount - maxStack;
             RefreshCount();

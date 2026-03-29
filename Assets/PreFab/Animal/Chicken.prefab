@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2810011888199816183}
   - component: {fileID: 6564054736548886003}
+  - component: {fileID: 4634883677468640390}
   - component: {fileID: 1567426477940616887}
   - component: {fileID: 2854072895694624192}
   - component: {fileID: 5175736632172819408}
@@ -39,6 +40,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6564054736548886003
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -84,6 +86,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 8560451000399327191, guid: 59e71d51ce6895445a885aed9a621fdc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -93,8 +96,27 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &4634883677468640390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444631684414522740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f9e73f28d847343917ccde8650bf0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Chiken
+  spriteRenderer: {fileID: 6564054736548886003}
+  textures: []
+  eggPrefab: {fileID: 1408301082346615450, guid: fda159e9eff14db4ba8bcf12094c35fc, type: 3}
+  spawnInterval: 50
+  eggsPerSpawn: 1
+  spawnOffset: {x: 0, y: 0.5}
+  spawnRadius: 1.5
+  animationDuration: 0.3
 --- !u!95 &1567426477940616887
 Animator:
   serializedVersion: 7
@@ -197,6 +219,7 @@ MonoBehaviour:
   roamingMax: 7
   roamingMin: 4
   roamingTimeMax: 10
+  isRoaming: 0
 --- !u!195 &712654327553938300
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -6,9 +6,11 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     public Item[] startItem;
+    public Item[] startItemChest;
     [Header("settings")]
     public int maxStackSize = 64;
     public InventorySlot[] inventorySlots;
+    public InventorySlot[] chestSlots;
     public GameObject inventoryItemPrefab;
     public int selectSlot = -1;
 
@@ -30,6 +32,10 @@ public class InventoryManager : MonoBehaviour
         foreach (Item item in startItem)
         {
             AddItem(item);
+        }
+        foreach (Item item in startItemChest)
+        {
+            AddItemChest(item);
         }
     }
 
@@ -80,8 +86,41 @@ public class InventoryManager : MonoBehaviour
                 return true;
             } 
         }
+        
         return false;
     }
+
+    public bool AddItemChest(Item item)
+    {
+        for (int i = 0; i < chestSlots.Length; i++)
+        {
+            InventorySlot slot = chestSlots[i];
+            InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
+            if (itemInSlot != null &&
+                itemInSlot.item == item &&
+                itemInSlot.count < maxStackSize &&
+                itemInSlot.item.stackable == true)
+            {
+                itemInSlot.count++;
+                itemInSlot.RefreshCount();
+                return true;
+            } 
+        }
+
+        for (int i = 0; i < chestSlots.Length; i++)
+        {
+            InventorySlot slot = chestSlots[i];
+            InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
+            if (itemInSlot == null)
+            {
+                SpawnNewItem(item, slot);
+                return true;
+            } 
+        }
+        
+        return false;
+    }
+
 
     public void SpawnNewItem(Item item, InventorySlot slot)
     {

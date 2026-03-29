@@ -1,34 +1,95 @@
 using UnityEngine;
 
-
 public class Extraction : MonoBehaviour
 {
-    public int damage = 2;
-    public int health = 6;
-    public InventoryManager inventoryManager;
-    public GameObject spawnPrefabCoin;
-    public GameObject spawnPrefabLoot;
-    public float spawnRadius = 1.3f;
-    public int maxSpawnCount = 4;
-    public SpriteRenderer sprite;
-    public Sprite[] textures;
-    public bool isDying = false;
-    public bool isRespawning = false;
-    public float respawnTimer = 0f;
-    public float respawnDelay = 10f;
+    #region Serialized Fields
 
-    public void Awake()
+    [Header("Combat Settings")]
+    [SerializeField] private int damage = 2;
+    [SerializeField] private int health = 6;
+
+    [Header("Spawn Settings")]
+    [SerializeField] private GameObject spawnPrefabCoin;
+    [SerializeField] private GameObject spawnPrefabLoot;
+    [SerializeField] private float spawnRadius = 1.3f;
+    [SerializeField] private int maxSpawnCount = 4;
+
+    [Header("Visual Settings")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite[] textures; // [0] - мёртвое состояние, [1] - живое
+
+    [Header("Respawn Settings")]
+    [SerializeField] private float respawnDelay = 10f;
+
+    #endregion
+
+    #region Private Fields
+
+    private InventoryManager _inventoryManager;
+    private bool _isDying = false;
+    private bool _isRespawning = false;
+    private float _respawnTimer = 0f;
+    private int _currentHealth;
+
+    #endregion
+
+    #region Constants
+
+    private const int LootSpawnCount = 3;
+
+    #endregion
+
+    #region Unity Lifecycle
+
+    private void Awake()
     {
-        inventoryManager = FindObjectOfType<InventoryManager>();
+        // Поиск InventoryManager, если не назначен в инспекторе
+        if (_inventoryManager == null)
+            _inventoryManager = FindObjectOfType<InventoryManager>();
+
+        // Получение SpriteRenderer, если не назначен
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Проверка наличия текстур для избежания IndexOutOfRangeException
+        if (textures == null || textures.Length < 2)
+        {
+            Debug.LogError($"Extraction на объекте {gameObject.name}: массив textures должен содержать минимум 2 спрайта (мёртвый и живой)!");
+            enabled = false;
+            return;
+        }
+
+        _currentHealth = health;
     }
+
+    private void FixedUpdate()
+    {
+        if (_isRespawning)
+        {
+            _respawnTimer += Time.fixedDeltaTime;
+            if (_respawnTimer >= respawnDelay)
+            {
+                Respawn();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Public Methods
 
     public void TakeDamage()
     {
-        Item receivedItem = inventoryManager.GetSelectedItem(false);
-        if (this.CompareTag(receivedItem.name))
+        // Нельзя получить урон во время смерти или респавна
+        if (_isDying || _isRespawning) return;
+
+        if (_inventoryManager == null) return;
+
+        Item receivedItem = _inventoryManager.GetSelectedItem(false);
+        if (receivedItem != null && CompareTag(receivedItem.name))
         {
-            health -= damage;
-            if (health <= 0 && !isDying)
+            _currentHealth -= damage;
+            if (_currentHealth <= 0 && !_isDying)
             {
                 Die();
             }
@@ -37,36 +98,72 @@ public class Extraction : MonoBehaviour
 
     public void Die()
     {
-        isDying = true;
+        _isDying = true;
 
-        SpawnPrefabs(spawnPrefabCoin, Random.Range(1, maxSpawnCount), spawnRadius);
-        SpawnPrefabs(spawnPrefabLoot, 3, spawnRadius);
+        // Спавн лута
+        SpawnLoot();
 
-        sprite.sprite = textures[0];
+        // Смена спрайта на мёртвый
+        spriteRenderer.sprite = textures[0];
 
-        isRespawning = true;
-        respawnTimer = 0f;
+        // Запуск респавна
+        _isRespawning = true;
+        _respawnTimer = 0f;
     }
 
-    public void FixedUpdate()
+    #endregion
+
+    #region Private Methods
+
+    /// <summary>
+    /// Возрождение объекта после смерти.
+    /// </summary>
+    private void Respawn()
     {
-        if (isRespawning)
+        _isRespawning = false;
+        _respawnTimer = 0f;
+        _isDying = false;
+        _currentHealth = health;
+
+        // Восстановление живого спрайта
+        if (textures.Length > 1)
+            spriteRenderer.sprite = textures[1];
+    }
+
+    /// <summary>
+    /// Спавн монет и обычного лута.
+    /// </summary>
+    private void SpawnLoot()
+    {
+        int coinCount = Random.Range(1, maxSpawnCount + 1);
+        SpawnPrefabs(spawnPrefabCoin, coinCount, spawnRadius);
+        SpawnPrefabs(spawnPrefabLoot, LootSpawnCount, spawnRadius);
+    }
+
+    /// <summary>
+    /// Спавн указанного префаба в случайных позициях вокруг объекта.
+    /// </summary>
+    private void SpawnPrefabs(GameObject prefab, int count, float radius)
+    {
+        if (prefab == null) return;
+
+        Vector2 spawnOrigin = transform.position;
+        for (int i = 0; i < count; i++)
         {
-            respawnTimer += Time.fixedDeltaTime;
-            if (respawnTimer >= respawnDelay)
-            {
-                sprite.sprite = textures[1];
-
-                isRespawning = false;
-                respawnTimer = 0f;
-
-                health = 6;
-                isDying = false;
-            }
+            Vector2 randomOffset = new Vector2(
+                Random.Range(-radius, radius),
+                Random.Range(-radius, radius)
+            );
+            Vector2 spawnPosition = spawnOrigin + randomOffset;
+            Instantiate(prefab, spawnPosition, Quaternion.identity);
         }
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    #endregion
+
+    #region Trigger Handling
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Tool"))
         {
@@ -74,17 +171,5 @@ public class Extraction : MonoBehaviour
         }
     }
 
-    private void SpawnPrefabs(GameObject prefab, int count, float radius)
-    {
-        Vector2 spawnPosition = transform.position;
-        for (int i = 0; i < count; i++)
-        {
-            Vector2 randomPosition = spawnPosition + new Vector2(
-                Random.Range(-radius, radius),
-                Random.Range(-radius, radius)
-            );
-            Instantiate(prefab, randomPosition, Quaternion.identity);
-        }
-    }
+    #endregion
 }
-
