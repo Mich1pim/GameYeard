@@ -11,6 +11,8 @@ public class InventoryManager : MonoBehaviour
     public int maxStackSize = 64;
     public InventorySlot[] inventorySlots;
     public InventorySlot[] chestSlots;
+    public InventorySlot[] craftSlots;
+    public InventorySlot[] endCraftSlots;
     public GameObject inventoryItemPrefab;
     public int selectSlot = -1;
 
@@ -45,13 +47,15 @@ public class InventoryManager : MonoBehaviour
         {
             bool isNumber = int.TryParse(Input.inputString, out int number);
             if (isNumber && number > 0 && number < 6)
-            ChangeSelectedSlot(number - 1);
+                ChangeSelectedSlot(number - 1);
         }
     }
 
     public void ChangeSelectedSlot(int newValue)
     {
-        if (selectSlot >= 0)
+        if (newValue < 0 || newValue >= inventorySlots.Length) return;
+
+        if (selectSlot >= 0 && selectSlot < inventorySlots.Length)
         {
             inventorySlots[selectSlot].Deselect();
         }
@@ -73,7 +77,7 @@ public class InventoryManager : MonoBehaviour
                 itemInSlot.count++;
                 itemInSlot.RefreshCount();
                 return true;
-            } 
+            }
         }
 
         for (int i = 0; i < inventorySlots.Length; i++)
@@ -84,9 +88,9 @@ public class InventoryManager : MonoBehaviour
             {
                 SpawnNewItem(item, slot);
                 return true;
-            } 
+            }
         }
-        
+
         return false;
     }
 
@@ -104,7 +108,7 @@ public class InventoryManager : MonoBehaviour
                 itemInSlot.count++;
                 itemInSlot.RefreshCount();
                 return true;
-            } 
+            }
         }
 
         for (int i = 0; i < chestSlots.Length; i++)
@@ -115,9 +119,9 @@ public class InventoryManager : MonoBehaviour
             {
                 SpawnNewItem(item, slot);
                 return true;
-            } 
+            }
         }
-        
+
         return false;
     }
 

@@ -1,6 +1,5 @@
-    using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class InventoryOpen : MonoBehaviour
@@ -30,5 +29,5 @@ public class InventoryOpen : MonoBehaviour
     {
         inventory.SetActive(true);
         inventoryOpen = true;
-    }   
+    }
 }

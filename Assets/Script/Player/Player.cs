@@ -28,6 +28,15 @@ public class Player : MonoBehaviour
         playerInputActions.Enable();
     }
 
+    private void OnDestroy()
+    {
+        if (playerInputActions != null)
+        {
+            playerInputActions.Disable();
+            playerInputActions.Dispose();
+        }
+    }
+
     public void IsTool()
     {
         moveSpeed = 0;

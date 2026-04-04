@@ -19,7 +19,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private Canvas parentCanvas;
 
     [HideInInspector] public bool isRightClickDrag = false;
-    [HideInInspector] public bool dropHandled = false;
+    [HideInInspector] public bool dropSuccess = false;
+    private InventoryItem splitRemainder;
+    private Transform splitRemainderParent;
+    private Vector3 splitRemainderLocalScale;
 
     void Awake()
     {
@@ -50,7 +53,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnBeginDrag(PointerEventData eventData)
     {
         isRightClickDrag = (eventData.button == PointerEventData.InputButton.Right);
-        dropHandled = false;
+        dropSuccess = false;
+        splitRemainder = null;
+        splitRemainderParent = null;
 
         parentCanvas = GetComponentInParent<Canvas>();
         if (parentCanvas == null)
@@ -58,6 +63,30 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
+        splitRemainderParent = parentAfterDrag;
+        splitRemainderLocalScale = transform.localScale;
+
+        // При правом клике — разделяем стак пополам сразу
+        if (isRightClickDrag && count > 1)
+        {
+            int splitCount = count / 2;
+            int remainCount = count - splitCount;
+
+            // Обновляем текущий элемент (перетаскиваемый)
+            count = splitCount;
+            RefreshCount();
+
+            // Создаём остаток в исходном слоте через Instantiate
+            if (InventoryManager.Instance != null && InventoryManager.Instance.inventoryItemPrefab != null)
+            {
+                GameObject remainderObj = Instantiate(InventoryManager.Instance.inventoryItemPrefab, splitRemainderParent);
+                splitRemainder = remainderObj.GetComponent<InventoryItem>();
+                splitRemainder.item = item;
+                splitRemainder.count = remainCount;
+                splitRemainder.InitialiseItem(item);
+            }
+        }
+
         transform.SetParent(parentCanvas.transform, true);
 
         rectTransform.pivot = new Vector2(0.5f, 0.5f);
@@ -85,23 +114,38 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // Если объект был уничтожен во время дропа — выходим
         if (this == null || gameObject == null) return;
 
-        if (isRightClickDrag && dropHandled)
+        image.raycastTarget = true;
+
+        if (isRightClickDrag)
         {
-            // Восстанавливаем исходный объект (если он ещё существует)
-            if (image != null) image.raycastTarget = true;
-            if (parentAfterDrag != null)
+            if (dropSuccess)
             {
-                transform.SetParent(parentAfterDrag, false);
-                rectTransform.anchoredPosition = Vector2.zero;
-                rectTransform.localScale = Vector3.one;
+                // Дроп успешен — остаток уже на месте, перетаскиваемый предмет уничтожается в слоте
+                splitRemainder = null;
+            }
+            else
+            {
+                // Дроп не удался — возвращаем перетаскиваемый стак обратно к остатку
+                if (splitRemainder != null && splitRemainder.gameObject != null)
+                {
+                    splitRemainder.count += count;
+                    splitRemainder.RefreshCount();
+                    Destroy(gameObject);
+                }
+                else if (splitRemainderParent != null)
+                {
+                    transform.SetParent(splitRemainderParent, false);
+                    rectTransform.anchoredPosition = Vector2.zero;
+                    rectTransform.localScale = splitRemainderLocalScale;
+                }
+                splitRemainder = null;
             }
             isRightClickDrag = false;
-            dropHandled = false;
+            dropSuccess = false;
             return;
         }
 
         // Обычный дроп (левая кнопка)
-        if (image != null) image.raycastTarget = true;
         if (parentAfterDrag != null)
         {
             transform.SetParent(parentAfterDrag, false);
@@ -109,7 +153,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             rectTransform.localScale = Vector3.one;
         }
         isRightClickDrag = false;
-        dropHandled = false;
+        dropSuccess = false;
     }
 
     public bool CanMergeWith(InventoryItem otherItem)

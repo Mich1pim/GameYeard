@@ -14,44 +14,23 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         InventoryItem draggedItem = dropped.GetComponent<InventoryItem>();
         if (draggedItem == null) return;
 
+        // Если это слот результата крафта — запрещаем дроп
+        if (GetComponent<CraftResultSlot>() != null) return;
+
         // ------------------------------------------------------------
         // 1. Разделение стека правой кнопкой
         // ------------------------------------------------------------
         if (draggedItem.isRightClickDrag)
         {
-            int half = draggedItem.count / 2;
-            if (half <= 0)
+            // Стак уже разделён в OnBeginDrag, просто добавляем перетаскиваемую половину в слот
+            if (CanAcceptItems(draggedItem.item, draggedItem.count))
             {
-                // Нечего делить (1 предмет)
-                draggedItem.dropHandled = true;
-                return;
+                AddItems(draggedItem.item, draggedItem.count);
+                Destroy(draggedItem.gameObject);
+                draggedItem.dropSuccess = true;
             }
-
-            // Проверяем, можно ли добавить половину в этот слот
-            if (CanAcceptItems(draggedItem.item, half))
-            {
-                // Уменьшаем исходный стек
-                draggedItem.count -= half;
-                
-                // Если исходный стек стал пуст — удаляем объект
-                if (draggedItem.count <= 0)
-                {
-                    Destroy(draggedItem.gameObject);
-                }
-                else
-                {
-                    draggedItem.RefreshCount();
-                }
-
-                // Добавляем половину в текущий слот
-                AddItems(draggedItem.item, half);
-                draggedItem.dropHandled = true;
-            }
-            else
-            {
-                // Нельзя добавить — отменяем разделение
-                draggedItem.dropHandled = true;
-            }
+            // Если нельзя принять — dropSuccess остаётся false, предмет вернётся в OnEndDrag
+            NotifyCraftSlot();
             return;
         }
 
@@ -65,6 +44,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             if (existingItem.CanMergeWith(draggedItem))
             {
                 existingItem.MergeStacks(draggedItem);
+                draggedItem.dropSuccess = true;
             }
             else
             {
@@ -74,15 +54,35 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
                 existingItem.transform.SetParent(draggedItemParent);
                 existingItem.transform.localPosition = Vector3.zero;
+                if (existingItem.TryGetComponent(out RectTransform existingRT))
+                    existingRT.anchoredPosition = Vector2.zero;
 
                 draggedItem.transform.SetParent(existingItemParent);
                 draggedItem.transform.localPosition = Vector3.zero;
+                if (draggedItem.TryGetComponent(out RectTransform draggedRT))
+                    draggedRT.anchoredPosition = Vector2.zero;
                 draggedItem.parentAfterDrag = existingItemParent;
+                draggedItem.dropSuccess = true;
             }
         }
         else
         {
             draggedItem.parentAfterDrag = transform;
+            draggedItem.dropSuccess = true;
+        }
+
+        NotifyCraftSlot();
+    }
+
+    /// <summary>
+    /// Уведомляет CraftSlot об изменении содержимого (для системы крафта).
+    /// </summary>
+    private void NotifyCraftSlot()
+    {
+        CraftSlot craftSlot = GetComponent<CraftSlot>();
+        if (craftSlot != null)
+        {
+            craftSlot.OnSlotChanged();
         }
     }
 
@@ -120,11 +120,13 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
     public void Select()
     {
-        image.sprite = usingItemSprite;
+        if (image != null)
+            image.sprite = usingItemSprite;
     }
 
     public void Deselect()
     {
-        image.sprite = notUsingItemSprite;
+        if (image != null)
+            image.sprite = notUsingItemSprite;
     }
 }

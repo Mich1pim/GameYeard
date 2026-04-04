@@ -5,14 +5,15 @@ using UnityEngine;
 public class Loot : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer sr;
-    [SerializeField] private BoxCollider2D colllider;
+    [SerializeField] private BoxCollider2D collider;
     [SerializeField] private float moveSpeed;
 
     private Item item;
     public void Initialize(Item item)
     {
         this.item = item;
-        sr.sprite = item.image;
+        if (sr != null)
+            sr.sprite = item.image;
     }
 
     public void OnTriggerEnter2D(Collider2D other)
@@ -28,9 +29,10 @@ public class Loot : MonoBehaviour
     }
     private IEnumerator MoveAndCollect(Transform target)
     {
-        Destroy(colllider);
+        if (collider != null)
+            Destroy(collider);
 
-        while(transform.position != target.position)
+        while (Vector3.Distance(transform.position, target.position) > 0.01f)
         {
             transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
             yield return 0;
