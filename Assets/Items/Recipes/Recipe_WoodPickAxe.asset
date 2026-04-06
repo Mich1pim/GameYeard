@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Recipe_WoodPickAxe
   m_EditorClassIdentifier: Assembly-CSharp::CraftRecipe
   recipeGrid:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 417f5b18a37989b47bb4c2daa5aa685f, type: 2}
+  - {fileID: 11400000, guid: 417f5b18a37989b47bb4c2daa5aa685f, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
-  - {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
-  - {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
   - {fileID: 0}
   resultItem: {fileID: 11400000, guid: e14eccec0d2844e40a56b9668b584e24, type: 2}
   resultCount: 1

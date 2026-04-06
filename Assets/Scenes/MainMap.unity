@@ -20209,9 +20209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CraftingManager
   recipes:
   - {fileID: 11400000, guid: 43a09a11cb9212d4dacdbfeedf4ed9e4, type: 2}
-  - {fileID: 11400000, guid: f81ce51b7081c9041a28487c6151cdb5, type: 2}
   - {fileID: 11400000, guid: bcd7af5fd2a059a4b957ce8dd54287e3, type: 2}
-  - {fileID: 11400000, guid: 66b436f0b99894b48aec94b1c27c2570, type: 2}
   - {fileID: 11400000, guid: 60280740651983440bc06ab30a6a08f7, type: 2}
 --- !u!114 &723733278
 MonoBehaviour:

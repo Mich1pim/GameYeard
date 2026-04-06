@@ -24,6 +24,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private Transform splitRemainderParent;
     private Vector3 splitRemainderLocalScale;
 
+    // Запоминаем слот крафта при начале перетаскивания
+    // (в OnDrop предмет уже на Canvas и GetComponentInParent вернёт null)
+    [HideInInspector] public CraftSlot originCraftSlot;
+
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -56,6 +60,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         dropSuccess = false;
         splitRemainder = null;
         splitRemainderParent = null;
+
+        // Запоминаем слот крафта ДО начала перетаскивания
+        originCraftSlot = GetComponentInParent<CraftSlot>();
 
         parentCanvas = GetComponentInParent<Canvas>();
         if (parentCanvas == null)
@@ -111,9 +118,6 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Если объект был уничтожен во время дропа — выходим
-        if (this == null || gameObject == null) return;
-
         image.raycastTarget = true;
 
         if (isRightClickDrag)
@@ -140,10 +144,18 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 }
                 splitRemainder = null;
             }
+
+            // Уведомляем слот крафта ДО проверки на уничтожение,
+            // т.к. при правом клике OnDrop мог Destroy(this) и gameObject может быть null
+            NotifyCraftSlotIfOrigin();
+
             isRightClickDrag = false;
             dropSuccess = false;
             return;
         }
+
+        // Объект мог быть уничтожен во время дропа (правый клик с успешным дропом)
+        if (this == null || gameObject == null) return;
 
         // Обычный дроп (левая кнопка)
         if (parentAfterDrag != null)
@@ -152,8 +164,24 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             rectTransform.anchoredPosition = Vector2.zero;
             rectTransform.localScale = Vector3.one;
         }
+
+        // Уведомляем слот крафта для левого клика
+        NotifyCraftSlotIfOrigin();
+
         isRightClickDrag = false;
         dropSuccess = false;
+    }
+
+    /// <summary>
+    /// Уведомляет исходный слот крафта после завершения перетаскивания.
+    /// </summary>
+    private void NotifyCraftSlotIfOrigin()
+    {
+        if (originCraftSlot != null && originCraftSlot.craftingUI != null)
+        {
+            originCraftSlot.craftingUI.NotifySlotChanged();
+        }
+        originCraftSlot = null;
     }
 
     public bool CanMergeWith(InventoryItem otherItem)

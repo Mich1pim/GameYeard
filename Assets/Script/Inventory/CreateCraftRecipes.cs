@@ -27,39 +27,23 @@ public class CreateCraftRecipes : MonoBehaviour
         CreateRecipe("Recipe_Boards", docka, 4, new Item[]
         {
             null, null, null,
-            null, wood, null,
-            null, wood, null
-        });
-
-        // Рецепт 2: 3 Wood в ряд → PickAxe (кирка из дерева)
-        CreateRecipe("Recipe_WoodPickAxe", pickAxe, 1, new Item[]
-        {
-            null, null, null,
             wood, wood, wood,
             null, null, null
         });
 
-        // Рецепт 3: 3 Stone в ряд → Axe (каменный топор)
-        CreateRecipe("Recipe_StoneAxe", axe, 1, new Item[]
+        // Рецепт 2: 3 Wood в ряд → PickAxe (кирка)
+        CreateRecipe("Recipe_WoodPickAxe", pickAxe, 1, new Item[]
         {
-            null, null, null,
-            stone, stone, stone,
-            null, null, null
-        });
-
-        // Рецепт 4: 2 Wood вертикально → палки (Docka x2)
-        CreateRecipe("Recipe_Sticks", docka, 2, new Item[]
-        {
-            null, null, null,
+            stone, stone, null,
             null, wood, null,
             null, wood, null
         });
 
-        // Рецепт 5: 2 Stone + 3 Wood → кирка
-        CreateRecipe("Recipe_StonePickAxe", pickAxe, 1, new Item[]
+        // Рецепт 3: 3 Stone в ряд → Axe (топор)
+        CreateRecipe("Recipe_StoneAxe", axe, 1, new Item[]
         {
-            stone, stone, stone,
-            null, wood, null,
+            stone, stone, null,
+            stone, wood, null,
             null, wood, null
         });
 

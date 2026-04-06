@@ -24,6 +24,15 @@
     "unityMCP": {
       "url": "http://127.0.0.1:8080/mcp",
       "type": "http"
+    },
+    "ivanMurzakMCP": {
+      "url": "http://localhost:24997",
+      "type": "http"
+    },
+    "prefabParserMCP": {
+      "command": "node",
+      "args": ["c:\\UnityGames\\Unity-Prefab-Parser-MCP\\dist\\index.js"],
+      "type": "stdio"
     }
   }
 }

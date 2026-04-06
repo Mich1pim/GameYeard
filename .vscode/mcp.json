@@ -3,6 +3,10 @@
     "unityMCP": {
       "url": "http://127.0.0.1:8080/mcp",
       "type": "http"
+    },
+    "ai-game-developer": {
+      "type": "http",
+      "url": "http://localhost:24997"
     }
   }
 }

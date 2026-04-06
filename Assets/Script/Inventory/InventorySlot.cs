@@ -17,6 +17,10 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         // Если это слот результата крафта — запрещаем дроп
         if (GetComponent<CraftResultSlot>() != null) return;
 
+        // Берём запомненный слот крафта из предмета (запомнен в OnBeginDrag,
+        // т.к. к моменту OnDrop предмет уже на Canvas и GetComponentInParent вернёт null)
+        CraftSlot originCraftSlot = draggedItem.originCraftSlot;
+
         // ------------------------------------------------------------
         // 1. Разделение стека правой кнопкой
         // ------------------------------------------------------------
@@ -31,6 +35,8 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             }
             // Если нельзя принять — dropSuccess остаётся false, предмет вернётся в OnEndDrag
             NotifyCraftSlot();
+            // Уведомляем исходный слот крафта
+            NotifyOriginCraftSlot(originCraftSlot);
             return;
         }
 
@@ -72,17 +78,41 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         }
 
         NotifyCraftSlot();
+        NotifyOriginCraftSlot(originCraftSlot);
     }
 
     /// <summary>
     /// Уведомляет CraftSlot об изменении содержимого (для системы крафта).
+    /// Вызываем с задержкой в 1 кадр, т.к. OnDrop вызывается ДО OnEndDrag,
+    /// и предметы ещё не успели обновить свои родительские трансформы.
     /// </summary>
     private void NotifyCraftSlot()
     {
         CraftSlot craftSlot = GetComponent<CraftSlot>();
         if (craftSlot != null)
         {
+            Invoke(nameof(DelayedNotifyCraftSlot), 0.01f);
+        }
+    }
+
+    private void DelayedNotifyCraftSlot()
+    {
+        CraftSlot craftSlot = GetComponent<CraftSlot>();
+        if (craftSlot != null)
+        {
             craftSlot.OnSlotChanged();
+        }
+    }
+
+    /// <summary>
+    /// Уведомляет исходный слот крафта (после Destroy предмета).
+    /// originCraftSlot запомнен ДО Destroy, поэтому вызываем напрямую.
+    /// </summary>
+    private void NotifyOriginCraftSlot(CraftSlot originCraftSlot)
+    {
+        if (originCraftSlot != null && originCraftSlot.craftingUI != null)
+        {
+            originCraftSlot.craftingUI.NotifySlotChanged();
         }
     }
 

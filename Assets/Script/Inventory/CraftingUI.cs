@@ -14,6 +14,7 @@ public class CraftingUI : MonoBehaviour
     private Item[] _currentGrid = new Item[9];
     private CraftRecipe _currentRecipe;
     private int _resultCount = 0;
+    private bool _isTakingResult = false;
 
     void Start()
     {
@@ -26,7 +27,8 @@ public class CraftingUI : MonoBehaviour
     /// </summary>
     public void NotifySlotChanged()
     {
-        UpdateCraftingGrid();
+        // Принудительно обновляем сетку, не ждём changed
+        ForceUpdateCraftingGrid();
     }
 
     /// <summary>
@@ -52,6 +54,21 @@ public class CraftingUI : MonoBehaviour
         {
             CheckRecipe();
         }
+    }
+
+    /// <summary>
+    /// Принудительно обновляет сетку и проверяет рецепт (без проверки changed).
+    /// Вызывается из NotifySlotChanged() для гарантии обновления.
+    /// </summary>
+    private void ForceUpdateCraftingGrid()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            InventoryItem itemInSlot = craftSlots[i].GetComponentInChildren<InventoryItem>();
+            _currentGrid[i] = itemInSlot != null ? itemInSlot.item : null;
+        }
+
+        CheckRecipe();
     }
 
     /// <summary>
@@ -122,9 +139,18 @@ public class CraftingUI : MonoBehaviour
     /// </summary>
     public void TakeResult()
     {
+        // Защита от повторного вызова (быстрые клики, пока Destroy отложенный)
+        if (_isTakingResult)
+        {
+            Debug.LogWarning("TakeResult: уже выполняется, игнорируем");
+            return;
+        }
+        _isTakingResult = true;
+
         if (_currentRecipe == null)
         {
             Debug.LogWarning("TakeResult: _currentRecipe == null");
+            _isTakingResult = false;
             return;
         }
 
@@ -134,6 +160,7 @@ public class CraftingUI : MonoBehaviour
         if (resultItem == null)
         {
             Debug.LogWarning("TakeResult: нет предмета в слоте результата");
+            _isTakingResult = false;
             return;
         }
 
@@ -166,10 +193,12 @@ public class CraftingUI : MonoBehaviour
             // Удаляем использованные предметы из сетки крафта
             ConsumeIngredients();
 
-            // Обновляем рецепт ПРИНУДИТЕЛЬНО (не через UpdateCraftingGrid, 
+            // Обновляем рецепт ПРИНУДИТЕЛЬНО (не через UpdateCraftingGrid,
             // т.к. Destroy отложенный и changed будет false)
             RefreshRecipeAfterConsume();
         }
+
+        _isTakingResult = false;
     }
 
     /// <summary>
@@ -251,14 +280,8 @@ public class CraftingUI : MonoBehaviour
             _currentGrid[i] = itemInSlot != null ? itemInSlot.item : null;
         }
 
-        // Уведомляем CraftSlot об изменениях
-        for (int i = 0; i < 9; i++)
-        {
-            CraftSlot craftSlot = craftSlots[i].GetComponent<CraftSlot>();
-            if (craftSlot != null)
-            {
-                craftSlot.OnSlotChanged();
-            }
-        }
+        // НЕ вызываем NotifyCraftSlot здесь — обновление произойдёт
+        // вручную через RefreshRecipeAfterConsume() в TakeResult().
+        // Цикл из 9 уведомлений создавал 9 копий предмета результата.
     }
 }
