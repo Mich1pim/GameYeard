@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 6166829415010305074}
   - component: {fileID: 7773755330343836053}
   - component: {fileID: 6431799765172316097}
+  - component: {fileID: 4212933135142032899}
+  - component: {fileID: 4340543996064147016}
+  - component: {fileID: 7633230343476969662}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -47,7 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
   startItem:
   - {fileID: 11400000, guid: 47663bfae2f51c04083cb9b2dbc57a65, type: 2}
-  - {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
+  startItemChest:
+  - {fileID: 11400000, guid: e14eccec0d2844e40a56b9668b584e24, type: 2}
   maxStackSize: 64
   inventorySlots:
   - {fileID: 0}
@@ -76,6 +80,27 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  chestSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  craftSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  endCraftSlots:
+  - {fileID: 0}
   inventoryItemPrefab: {fileID: 451906289403611365, guid: dd0797e6fa4f94c4e8a8319c5a0ea8ee, type: 3}
   selectSlot: -1
 --- !u!114 &6431799765172316097
@@ -92,3 +117,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryOpen
   inventory: {fileID: 0}
   inventoryOpen: 0
+--- !u!114 &4212933135142032899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701529121982279961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d84164da3bc63334ca86a5d60414034b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingManager
+  recipes:
+  - {fileID: 11400000, guid: 43a09a11cb9212d4dacdbfeedf4ed9e4, type: 2}
+  - {fileID: 11400000, guid: bcd7af5fd2a059a4b957ce8dd54287e3, type: 2}
+  - {fileID: 11400000, guid: 60280740651983440bc06ab30a6a08f7, type: 2}
+--- !u!114 &4340543996064147016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701529121982279961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e867b15d66339b144bced620f4e31333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingUI
+  craftSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  endCraftSlots:
+  - {fileID: 0}
+  inventoryItemPrefab: {fileID: 451906289403611365, guid: dd0797e6fa4f94c4e8a8319c5a0ea8ee, type: 3}
+--- !u!114 &7633230343476969662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701529121982279961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9377a8d1ad444dd4cb2ede4cafe61d28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingSetup
+  craftSlotsContainer: {fileID: 0}
+  endCraftSlotContainer: {fileID: 0}
