@@ -174,13 +174,13 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     /// <summary>
     /// Уведомляет исходный слот крафта после завершения перетаскивания.
+    /// НЕ вызываем здесь NotifySlotChanged - это сделает InventorySlot.OnDrop(),
+    /// чтобы избежать двойного уведомления и дублирования результатов крафта.
     /// </summary>
     private void NotifyCraftSlotIfOrigin()
     {
-        if (originCraftSlot != null && originCraftSlot.craftingUI != null)
-        {
-            originCraftSlot.craftingUI.NotifySlotChanged();
-        }
+        // НЕ вызываем NotifySlotChanged здесь - это сделает InventorySlot.OnDrop()
+        // с небольшой задержкой, чтобы предмет успел переместиться в новый слот
         originCraftSlot = null;
     }
 

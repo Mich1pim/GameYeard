@@ -15,6 +15,7 @@ public class CraftingUI : MonoBehaviour
     private CraftRecipe _currentRecipe;
     private int _resultCount = 0;
     private bool _isTakingResult = false;
+    private bool _isUpdatingCraftingGrid = false; // Защита от рекурсивных вызовов
 
     void Start()
     {
@@ -27,6 +28,12 @@ public class CraftingUI : MonoBehaviour
     /// </summary>
     public void NotifySlotChanged()
     {
+        // Защита от рекурсивных вызовов и множественных уведомлений
+        if (_isUpdatingCraftingGrid || _isTakingResult)
+        {
+            return;
+        }
+
         // Принудительно обновляем сетку, не ждём changed
         ForceUpdateCraftingGrid();
     }
@@ -62,13 +69,39 @@ public class CraftingUI : MonoBehaviour
     /// </summary>
     private void ForceUpdateCraftingGrid()
     {
-        for (int i = 0; i < 9; i++)
-        {
-            InventoryItem itemInSlot = craftSlots[i].GetComponentInChildren<InventoryItem>();
-            _currentGrid[i] = itemInSlot != null ? itemInSlot.item : null;
-        }
+        // Защита от рекурсивных вызовов
+        if (_isUpdatingCraftingGrid)
+            return;
 
-        CheckRecipe();
+        _isUpdatingCraftingGrid = true;
+
+        try
+        {
+            // Проверяем, действительно ли сетка изменилась
+            bool gridChanged = false;
+
+            for (int i = 0; i < 9; i++)
+            {
+                InventoryItem itemInSlot = craftSlots[i].GetComponentInChildren<InventoryItem>();
+                Item newItem = itemInSlot != null ? itemInSlot.item : null;
+
+                if (_currentGrid[i] != newItem)
+                {
+                    gridChanged = true;
+                    _currentGrid[i] = newItem;
+                }
+            }
+
+            // Проверяем рецепт только если сетка действительно изменилась
+            if (gridChanged)
+            {
+                CheckRecipe();
+            }
+        }
+        finally
+        {
+            _isUpdatingCraftingGrid = false;
+        }
     }
 
     /// <summary>
@@ -76,6 +109,12 @@ public class CraftingUI : MonoBehaviour
     /// </summary>
     private void CheckRecipe()
     {
+        // Защита от повторной проверки во время забора результата
+        if (_isTakingResult)
+        {
+            return;
+        }
+
         _currentRecipe = CraftingManager.Instance.FindRecipe(_currentGrid);
 
         // Очищаем слот результата

@@ -69,6 +69,12 @@ public class InventorySlot : MonoBehaviour, IDropHandler
                     draggedRT.anchoredPosition = Vector2.zero;
                 draggedItem.parentAfterDrag = existingItemParent;
                 draggedItem.dropSuccess = true;
+
+                // УВЕДОМЛЯЕМ оба слота после обмена (исходный и целевой)
+                // Это критично для системы крафта
+                NotifyCraftSlot();
+                NotifyOriginCraftSlot(originCraftSlot);
+                return; // Уже уведомили, выходим
             }
         }
         else
@@ -112,8 +118,24 @@ public class InventorySlot : MonoBehaviour, IDropHandler
     {
         if (originCraftSlot != null && originCraftSlot.craftingUI != null)
         {
-            originCraftSlot.craftingUI.NotifySlotChanged();
+            // Вызываем с задержкой, чтобы предмет успел переместиться
+            // и состояние слота крафта обновилось ДО проверки рецепта
+            Invoke(nameof(DelayedNotifyOriginCraftSlot), 0.01f);
+
+            // Сохраняем ссылку для отложенного вызова
+            _pendingOriginCraftSlot = originCraftSlot;
         }
+    }
+
+    private CraftSlot _pendingOriginCraftSlot;
+
+    private void DelayedNotifyOriginCraftSlot()
+    {
+        if (_pendingOriginCraftSlot != null && _pendingOriginCraftSlot.craftingUI != null)
+        {
+            _pendingOriginCraftSlot.craftingUI.NotifySlotChanged();
+        }
+        _pendingOriginCraftSlot = null;
     }
 
     // Вспомогательные методы для разделения стека
