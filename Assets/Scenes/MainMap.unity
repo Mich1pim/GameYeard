@@ -108432,7 +108432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d6bb729ea8540545a082f80ed95db70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopInteraction
-  interactionDistance: 2
+  interactionDistance: 1.4
   interactionKey: 101
   shopPanel: {fileID: 1689503008}
   shopSlotsContainer: {fileID: 316825200}
