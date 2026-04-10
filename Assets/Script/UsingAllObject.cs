@@ -5,18 +5,19 @@ public class UsingAllObject : MonoBehaviour
     protected Animator animator;
     protected float distance;
     protected bool isOpened = false;
+    protected float interactionDistance = 1.0f;
     protected KeyCode interactionKey = KeyCode.E;
 
     protected virtual void Start()
     {
         animator = gameObject.GetComponent<Animator>();
-        
+
     }
 
     protected virtual void Update()
     {
         distance = Vector3.Distance(GameObject.Find("Player").transform.position, gameObject.transform.position);
-        if (Input.GetKeyDown(interactionKey) && distance < 1.0f)
+        if (Input.GetKeyDown(interactionKey) && distance < interactionDistance)
         {
             if (isOpened)
                 UnUse();

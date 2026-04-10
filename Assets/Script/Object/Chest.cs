@@ -5,10 +5,11 @@ public class Chest : UsingAllObject
     public GameObject ChestSlots;
     public GameObject InventorySlots;
     public bool isOpen = false;
-    
+
     protected override void Start()
     {
         base.Start();
+        interactionDistance = 0.5f;
     }
 
     protected override void Update()
@@ -47,7 +48,7 @@ public class Chest : UsingAllObject
             isOpen = false;
         }
     }
-    
+
     public void CloseChest()
     {
         if (isOpen)
@@ -71,5 +72,5 @@ public class Chest : UsingAllObject
         ChestSlots.SetActive(true);
         InventorySlots.SetActive(true);
         isOpen = true;
-    }  
+    }
 }

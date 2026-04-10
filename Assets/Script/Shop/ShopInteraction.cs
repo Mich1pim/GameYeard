@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Основной скрипт магазина. Управление торговлей между игроком и магазином.
@@ -23,8 +24,21 @@ public class ShopInteraction : MonoBehaviour
 
     [Header("Настройки магазина")]
     [SerializeField] private int shopMoney = 100;
+    [Tooltip("Максимальное количество слотов для продажи (дефолтных + проданных игроком)")]
+    public int maxShopSlots = 8;
     [SerializeField] private List<Item> defaultItemsForSale = new List<Item>();
-    [SerializeField] private Dictionary<Item, int> itemPrices = new Dictionary<Item, int>();
+    [Tooltip("Цены для предметов. Количество элементов должно совпадать с defaultItemsForSale")]
+    [SerializeField] private List<ShopItemPrice> itemPrices = new List<ShopItemPrice>();
+
+    /// <summary>
+    /// Сериализуемая структура для цен предметов (отображается в Inspector)
+    /// </summary>
+    [System.Serializable]
+    public struct ShopItemPrice
+    {
+        public Item item;
+        public int price;
+    }
 
     private bool _isShopOpen = false;
     private Transform _playerTransform;
@@ -77,7 +91,7 @@ public class ShopInteraction : MonoBehaviour
             // Инициализируем цены если не заданы
             if (itemPrices == null)
             {
-                itemPrices = new Dictionary<Item, int>();
+                itemPrices = new List<ShopItemPrice>();
             }
 
             // Загружаем товары по умолчанию
@@ -96,25 +110,49 @@ public class ShopInteraction : MonoBehaviour
     {
         if (defaultItemsForSale == null || defaultItemsForSale.Count == 0) return;
 
+        int loadedCount = 0;
         foreach (Item item in defaultItemsForSale)
         {
             if (item == null) continue;
+            if (loadedCount >= maxShopSlots)
+            {
+                Debug.LogWarning($"ShopInteraction: превышен лимит слотов ({maxShopSlots}). Загружено только {loadedCount} предметов.");
+                break;
+            }
 
             int price = 10; // Цена по умолчанию
-            if (itemPrices.ContainsKey(item))
+
+            // Ищем цену в списке itemPrices
+            foreach (var itemPrice in itemPrices)
             {
-                price = itemPrices[item];
-            }
-            else if (itemPrices.Count > 0)
-            {
-                // Берём среднюю цену
-                int totalPrice = 0;
-                foreach (var kvp in itemPrices) totalPrice += kvp.Value;
-                price = totalPrice / itemPrices.Count;
+                if (itemPrice.item == item)
+                {
+                    price = itemPrice.price;
+                    break;
+                }
             }
 
             _shopInventory[item] = 5; // По умолчанию 5 штук
-            itemPrices[item] = price;
+
+            // Если цены ещё нет в списке — добавляем
+            bool priceExists = false;
+            for (int i = 0; i < itemPrices.Count; i++)
+            {
+                if (itemPrices[i].item == item)
+                {
+                    var updated = itemPrices[i];
+                    updated.price = price;
+                    itemPrices[i] = updated;
+                    priceExists = true;
+                    break;
+                }
+            }
+            if (!priceExists)
+            {
+                itemPrices.Add(new ShopItemPrice { item = item, price = price });
+            }
+
+            loadedCount++;
         }
     }
 
@@ -178,12 +216,38 @@ public class ShopInteraction : MonoBehaviour
             if (shopPanel == null) return;
             if (!_isShopOpen) return;
 
+            // Удаляем предметы, которые игрок продал магазину (не бесконечные)
+            RemovePlayerSoldItems();
+
             shopPanel.SetActive(false);
             _isShopOpen = false;
         }
         catch (System.Exception e)
         {
             Debug.LogError($"ShopInteraction: ошибка закрытия - {e.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Удаляет из магазина предметы, которые игрок продал ему (не defaultItemsForSale)
+    /// </summary>
+    private void RemovePlayerSoldItems()
+    {
+        var itemsToRemove = new List<Item>();
+
+        foreach (var kvp in _shopInventory)
+        {
+            Item item = kvp.Key;
+            // Не удаляем бесконечные предметы (из defaultItemsForSale)
+            if (!IsInfiniteItem(item))
+            {
+                itemsToRemove.Add(item);
+            }
+        }
+
+        foreach (Item item in itemsToRemove)
+        {
+            _shopInventory.Remove(item);
         }
     }
 
@@ -209,10 +273,15 @@ public class ShopInteraction : MonoBehaviour
 
         if (_shopInventory.Count == 0) return;
 
+        // Ограничиваем количество слотов
+        int slotsToShow = Mathf.Min(_shopInventory.Count, maxShopSlots);
+
         // Создаём слоты из префаба InventorySlot
         int slotIndex = 0;
         foreach (var kvp in _shopInventory)
         {
+            if (slotIndex >= slotsToShow) break;
+
             Item item = kvp.Key;
             int count = kvp.Value;
 
@@ -273,11 +342,45 @@ public class ShopInteraction : MonoBehaviour
                             behaviour.enabled = false;
                         }
                     }
+
+                    // Создаём текстовый элемент цены как дочерний элемент предмета
+                    CreatePriceText(itemGo, GetItemPrice(item));
                 }
             }
 
             slotIndex++;
         }
+    }
+
+    /// <summary>
+    /// Создаёт текстовый элемент цены как дочерний элемент предмета с использованием TextMeshPro
+    /// </summary>
+    private void CreatePriceText(GameObject parentGo, int price)
+    {
+        GameObject priceObj = new GameObject("PriceText");
+        priceObj.transform.SetParent(parentGo.transform);
+        priceObj.transform.localScale = Vector3.one;
+
+        var rectTransform = priceObj.AddComponent<RectTransform>();
+        rectTransform.anchorMin = new Vector2(0.5f, 0f);
+        rectTransform.anchorMax = new Vector2(0.5f, 0f);
+        rectTransform.pivot = new Vector2(0.5f, 0f);
+        rectTransform.anchoredPosition = new Vector2(0, -15);
+        rectTransform.sizeDelta = new Vector2(80, 22);
+
+        var textMeshPro = priceObj.AddComponent<TMPro.TextMeshProUGUI>();
+        textMeshPro.text = $"{price}$";
+        textMeshPro.fontSize = 24;
+        textMeshPro.fontStyle = TMPro.FontStyles.Bold;
+        textMeshPro.alignment = TMPro.TextAlignmentOptions.Center;
+        textMeshPro.color = Color.black; // Чёрный цвет
+        textMeshPro.font = TMPro.TMP_Settings.defaultFontAsset;
+        textMeshPro.enableWordWrapping = false;
+        textMeshPro.raycastTarget = false;
+
+        // Белая обводка для контраста на тёмном фоне
+        textMeshPro.outlineColor = Color.white;
+        textMeshPro.outlineWidth = 0.2f;
     }
 
     /// <summary>
@@ -295,9 +398,12 @@ public class ShopInteraction : MonoBehaviour
 
     private int GetItemPrice(Item item)
     {
-        if (itemPrices.ContainsKey(item))
+        foreach (var itemPrice in itemPrices)
         {
-            return itemPrices[item];
+            if (itemPrice.item == item)
+            {
+                return itemPrice.price;
+            }
         }
         return 10; // Цена по умолчанию
     }
@@ -378,7 +484,16 @@ public class ShopInteraction : MonoBehaviour
                 Player.Instance.coin += totalSellPrice;
             }
 
-            // Добавляем предмет в магазин
+            // Проверяем, есть ли место в магазине для добавления предмета
+            bool shopIsFull = !_shopInventory.ContainsKey(item) && _shopInventory.Count >= maxShopSlots;
+
+            if (shopIsFull)
+            {
+                Debug.LogWarning($"ShopInteraction: магазин заполнен ({maxShopSlots} слотов). Предмет продан, но магазин его не принимает.");
+                return;
+            }
+
+            // Добавляем предмет в магазин (есть место)
             if (_shopInventory.ContainsKey(item))
             {
                 _shopInventory[item] += count;
@@ -386,7 +501,21 @@ public class ShopInteraction : MonoBehaviour
             else
             {
                 _shopInventory[item] = count;
-                itemPrices[item] = GetItemPrice(item);
+                // Добавляем цену если её нет
+                bool priceExists = false;
+                for (int i = 0; i < itemPrices.Count; i++)
+                {
+                    if (itemPrices[i].item == item)
+                    {
+                        priceExists = true;
+                        break;
+                    }
+                }
+                if (!priceExists)
+                {
+                    int price = GetItemPrice(item);
+                    itemPrices.Add(new ShopItemPrice { item = item, price = price });
+                }
             }
 
             UpdateShopUI();
@@ -424,6 +553,13 @@ public class ShopInteraction : MonoBehaviour
     {
         if (item == null || count <= 0) return;
 
+        // Проверяем лимит слотов
+        if (!_shopInventory.ContainsKey(item) && _shopInventory.Count >= maxShopSlots)
+        {
+            Debug.LogWarning($"ShopInteraction: магазин заполнен ({maxShopSlots} слотов).");
+            return;
+        }
+
         if (_shopInventory.ContainsKey(item))
         {
             _shopInventory[item] += count;
@@ -433,7 +569,24 @@ public class ShopInteraction : MonoBehaviour
             _shopInventory[item] = count;
         }
 
-        itemPrices[item] = price;
+        // Обновляем или добавляем цену
+        bool priceExists = false;
+        for (int i = 0; i < itemPrices.Count; i++)
+        {
+            if (itemPrices[i].item == item)
+            {
+                var updated = itemPrices[i];
+                updated.price = price;
+                itemPrices[i] = updated;
+                priceExists = true;
+                break;
+            }
+        }
+        if (!priceExists)
+        {
+            itemPrices.Add(new ShopItemPrice { item = item, price = price });
+        }
+
         UpdateShopUI();
     }
 

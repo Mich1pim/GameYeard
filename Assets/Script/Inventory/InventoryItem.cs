@@ -56,6 +56,12 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (item == null)
+        {
+            Debug.LogWarning("InventoryItem: OnBeginDrag вызван без предмета");
+            return;
+        }
+
         isRightClickDrag = (eventData.button == PointerEventData.InputButton.Right);
         dropSuccess = false;
         splitRemainder = null;
@@ -68,7 +74,15 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (parentCanvas == null)
             parentCanvas = FindObjectOfType<Canvas>();
 
-        image.raycastTarget = false;
+        if (parentCanvas == null)
+        {
+            Debug.LogError("InventoryItem: Canvas не найден!");
+            return;
+        }
+
+        if (image != null)
+            image.raycastTarget = false;
+
         parentAfterDrag = transform.parent;
         splitRemainderParent = parentAfterDrag;
         splitRemainderLocalScale = transform.localScale;
@@ -96,24 +110,44 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         transform.SetParent(parentCanvas.transform, true);
 
-        rectTransform.pivot = new Vector2(0.5f, 0.5f);
-        rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-        rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        rectTransform = GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+            rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        }
 
         transform.SetAsLastSibling();
+
+        // Сразу перемещаем предмет под курсор
+        OnDrag(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (parentCanvas == null) return;
 
+        // Для Screen Space - Overlay canvas камера = null
+        // Для Screen Space - Camera или World Space — используем worldCamera
+        Camera cam = parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay
+            ? null
+            : parentCanvas.worldCamera;
+
+        // Используем eventData.position вместо Input.mousePosition
+        // Input.mousePosition не работает в билде с New Input System
+        Vector2 mousePosition = eventData.position;
+
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             parentCanvas.transform as RectTransform,
-            Input.mousePosition,
-            parentCanvas.worldCamera,
+            mousePosition,
+            cam,
             out Vector2 localPoint);
 
-        rectTransform.anchoredPosition = localPoint;
+        if (rectTransform != null)
+        {
+            rectTransform.anchoredPosition = localPoint;
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)

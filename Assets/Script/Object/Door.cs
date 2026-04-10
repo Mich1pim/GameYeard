@@ -6,6 +6,7 @@ public class Door : UsingAllObject
     protected override void Start()
     {
         base.Start();
+        interactionDistance = 0.8f;
     }
 
     protected override void Update()

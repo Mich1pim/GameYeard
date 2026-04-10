@@ -1,0 +1,3 @@
+event: message
+data: {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"2 validation errors for call[get_document_text]\nfilename\n  Missing required argument [type=missing_argument, input_value={'file_path': 'C:\\\\\\\\Unit...m\\\\\\\\Диплом.docx'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing_argument\nfile_path\n  Unexpected keyword argument [type=unexpected_keyword_argument, input_value='C:\\\\\\\\UnityGames\\\\\\\\Game...om\\\\\\\\Диплом.docx', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/unexpected_keyword_argument"}],"isError":true}}
+

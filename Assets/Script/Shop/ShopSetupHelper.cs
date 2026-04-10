@@ -41,17 +41,26 @@ public class ShopSetupHelper : MonoBehaviour
             return;
         }
 
+        // Проверяем лимит слотов
+        if (shopItems.Count > shop.maxShopSlots)
+        {
+            Debug.LogWarning($"ShopSetupHelper: количество предметов ({shopItems.Count}) превышает лимит слотов ({shop.maxShopSlots}). Будут добавлены только первые {shop.maxShopSlots}.");
+        }
+
         // Очищаем старые предметы
         shop.ClearShopInventory();
 
-        // Добавляем новые
+        // Добавляем новые (с учётом лимита)
+        int added = 0;
         foreach (var shopItem in shopItems)
         {
             if (shopItem.item == null) continue;
+            if (added >= shop.maxShopSlots) break;
             shop.AddItemToShop(shopItem.item, shopItem.count, shopItem.price);
+            added++;
         }
 
-        Debug.Log($"ShopSetupHelper: Добавлено {shopItems.Count} предметов в магазин");
+        Debug.Log($"ShopSetupHelper: Добавлено {added} предметов в магазин");
     }
 #endif
 }
