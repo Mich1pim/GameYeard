@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 55918983614345673}
   - component: {fileID: 3553727030825789839}
   - component: {fileID: 7657216070637599719}
+  - component: {fileID: -1502443042742151688}
   m_Layer: 0
   m_Name: Age
   m_TagString: Untagged
@@ -105,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40290c1029140d244abcad46d9986f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Looting
-  inventoryManager: {fileID: 0}
   itemToPickUp: {fileID: 11400000, guid: db482fbddfe4050419f3dfda61360ecd, type: 2}
 --- !u!60 &7657216070637599719
 PolygonCollider2D:
@@ -160,3 +160,18 @@ PolygonCollider2D:
       - {x: 0.5, y: 0.5}
       - {x: -0.5, y: 0.5}
   m_UseDelaunayMesh: 0
+--- !u!114 &-1502443042742151688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408301082346615450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5fb5eea2ee5ed45b19212ce41b5ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemName: 
+  count: 1
+  objectID: 

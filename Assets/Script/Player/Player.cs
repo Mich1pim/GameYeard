@@ -42,6 +42,18 @@ public class Player : MonoBehaviour
         moveSpeed = 0;
     }
 
+    public void DisableInput()
+    {
+        if (playerInputActions != null)
+            playerInputActions.Disable();
+    }
+
+    public void EnableInput()
+    {
+        if (playerInputActions != null)
+            playerInputActions.Enable();
+    }
+
     private Vector2 GetMovementVector()
     {
         Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();

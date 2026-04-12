@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8825392887482216512}
   - component: {fileID: 5578569862593422421}
   - component: {fileID: 3736135123130927675}
+  - component: {fileID: -4810897399321879957}
   m_Layer: 0
   m_Name: Kabachek Variant
   m_TagString: Untagged
@@ -105,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40290c1029140d244abcad46d9986f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Looting
-  inventoryManager: {fileID: 7773755330343836053, guid: b386ea2f82694db448aab2e74f5bcd61, type: 3}
   itemToPickUp: {fileID: 11400000, guid: e851a72b5149a5641a401ba0f49d49c2, type: 2}
 --- !u!60 &3736135123130927675
 PolygonCollider2D:
@@ -162,3 +162,18 @@ PolygonCollider2D:
       - {x: 0.5, y: 0.0625}
       - {x: 0.0625, y: 0.5}
   m_UseDelaunayMesh: 0
+--- !u!114 &-4810897399321879957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2393075615332740618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5fb5eea2ee5ed45b19212ce41b5ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemName: 
+  count: 1
+  objectID: 

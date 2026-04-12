@@ -41,14 +41,28 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    private bool _inputEnabled = true;
+
     public void Update()
     {
+        if (!_inputEnabled) return;
+
         if (Input.inputString != null)
         {
             bool isNumber = int.TryParse(Input.inputString, out int number);
             if (isNumber && number > 0 && number < 6)
                 ChangeSelectedSlot(number - 1);
         }
+    }
+
+    public void DisableInput()
+    {
+        _inputEnabled = false;
+    }
+
+    public void EnableInput()
+    {
+        _inputEnabled = true;
     }
 
     public void ChangeSelectedSlot(int newValue)

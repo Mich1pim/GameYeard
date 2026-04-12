@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4120598204a88046a155206d6044f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Extraction
+  objectID: 
   damage: 2
   health: 6
   spawnPrefabCoin: {fileID: 8484565541269048068, guid: f2c8e85d67f22d447b5938a8af10ea1c, type: 3}

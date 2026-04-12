@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3026227270851122187}
   - component: {fileID: 2228795843951460382}
   - component: {fileID: 6943462797465939568}
+  - component: {fileID: 7592186137222722584}
   m_Layer: 0
   m_Name: Pheno Variant
   m_TagString: Untagged
@@ -105,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40290c1029140d244abcad46d9986f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Looting
-  inventoryManager: {fileID: 7773755330343836053, guid: b386ea2f82694db448aab2e74f5bcd61, type: 3}
   itemToPickUp: {fileID: 11400000, guid: efd527f5ef560944984ff6f6dad208c9, type: 2}
 --- !u!60 &6943462797465939568
 PolygonCollider2D:
@@ -162,3 +162,18 @@ PolygonCollider2D:
       - {x: 0.5, y: 0.0625}
       - {x: 0.0625, y: 0.5}
   m_UseDelaunayMesh: 0
+--- !u!114 &7592186137222722584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8264281439839849025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5fb5eea2ee5ed45b19212ce41b5ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemName: 
+  count: 1
+  objectID: 

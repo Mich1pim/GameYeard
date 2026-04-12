@@ -1,17 +1,20 @@
 using UnityEngine;
 
-public class Bush : UsingAllObject
+public class Bush : UsingAllObject, ISaveable
 {
     #region Serialized Fields
+
+    [Header("Object ID (для сохранений)")]
+    [SerializeField] private string objectID;
 
     [Header("Bush Settings")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite[] textures;          // [0] - пустой куст, [1+] - стадии роста с ягодами
     [SerializeField] private GameObject strawberryPrefab;
-    
+
     [Header("Growth Settings")]
     [SerializeField] private float growthIntervalMinutes = 5f; // время между стадиями роста (в минутах)
-    
+
     [Header("Interaction")]
     [SerializeField] private float interactionDistance = 1.2f;
     [SerializeField] private Vector2 spawnOffset = new Vector2(0, 0.5f);
@@ -37,10 +40,14 @@ public class Bush : UsingAllObject
 
     private void Start()
     {
+        // Автогенерация ID если не назначен
+        if (string.IsNullOrEmpty(objectID))
+            objectID = GetHierarchyPath();
+
         // Автоматическое получение компонентов, если не назначены
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
         // Проверка наличия текстур
         if (textures == null || textures.Length == 0)
         {
@@ -48,7 +55,7 @@ public class Bush : UsingAllObject
             enabled = false;
             return;
         }
-        
+
         _currentStage = 0;
         _lastGrowthTimeMinutes = GetCurrentMinutes();
         UpdateSprite();
@@ -71,7 +78,7 @@ public class Bush : UsingAllObject
     protected override void Update()
     {
         base.Update(); // обновляет distance из UsingAllObject
-        
+
         // Сбор урожая, если куст готов и игрок рядом
         if (distance < interactionDistance && Input.GetKeyDown(interactionKey) && IsReadyForHarvest())
         {
@@ -134,7 +141,7 @@ public class Bush : UsingAllObject
         {
             SpawnStrawberry();
         }
-        
+
         // Сброс куста
         _currentStage = 0;
         UpdateSprite();
@@ -162,14 +169,53 @@ public class Bush : UsingAllObject
     private void SpawnStrawberry()
     {
         if (strawberryPrefab == null) return;
-        
+
         Vector2 randomOffset = new Vector2(
             Random.Range(-StrawberrySpawnRadius, StrawberrySpawnRadius),
             Random.Range(-StrawberrySpawnRadius, StrawberrySpawnRadius)
         );
-        
+
         Vector2 spawnPosition = (Vector2)transform.position + spawnOffset + randomOffset;
         Instantiate(strawberryPrefab, spawnPosition, Quaternion.identity);
+    }
+
+    #endregion
+
+    #region ISaveable
+
+    private string GetHierarchyPath()
+    {
+        Transform current = transform;
+        string path = current.name;
+        while (current.parent != null)
+        {
+            current = current.parent;
+            path = current.name + "/" + path;
+        }
+        return $"{GetType().Name}_{path}";
+    }
+
+    public string GetObjectId()
+    {
+        return objectID;
+    }
+
+    public WorldObjectData GetSaveData()
+    {
+        return new WorldObjectData
+        {
+            objectId = GetObjectId(),
+            objectType = "Bush",
+            stage = _currentStage,
+            lastGrowthMinutes = _lastGrowthTimeMinutes
+        };
+    }
+
+    public void LoadData(WorldObjectData data)
+    {
+        _currentStage = data.stage;
+        _lastGrowthTimeMinutes = data.lastGrowthMinutes;
+        UpdateSprite();
     }
 
     #endregion

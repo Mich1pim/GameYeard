@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8243547718428336634}
   - component: {fileID: 5005717248834369007}
   - component: {fileID: 4306995894274857857}
+  - component: {fileID: -8826888408054687538}
   m_Layer: 0
   m_Name: Wood (1)
   m_TagString: Untagged
@@ -105,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40290c1029140d244abcad46d9986f74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Looting
-  inventoryManager: {fileID: 7773755330343836053, guid: b386ea2f82694db448aab2e74f5bcd61, type: 3}
   itemToPickUp: {fileID: 11400000, guid: f1cea49679ff7cb43a7caef7c58d00ae, type: 2}
 --- !u!60 &4306995894274857857
 PolygonCollider2D:
@@ -162,3 +162,18 @@ PolygonCollider2D:
       - {x: 0.5, y: 0.0625}
       - {x: 0.0625, y: 0.5}
   m_UseDelaunayMesh: 0
+--- !u!114 &-8826888408054687538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965910062730280880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5fb5eea2ee5ed45b19212ce41b5ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemName: 
+  count: 1
+  objectID: 

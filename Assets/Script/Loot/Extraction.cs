@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class Extraction : MonoBehaviour
+public class Extraction : MonoBehaviour, ISaveable
 {
     #region Serialized Fields
+
+    [Header("Object ID (для сохранений)")]
+    [SerializeField] private string objectID;
 
     [Header("Combat Settings")]
     [SerializeField] private int damage = 2;
@@ -43,6 +46,10 @@ public class Extraction : MonoBehaviour
 
     private void Awake()
     {
+        // Автогенерация ID если не назначен
+        if (string.IsNullOrEmpty(objectID))
+            objectID = GetHierarchyPath();
+
         // Поиск InventoryManager, если не назначен в инспекторе
         if (_inventoryManager == null)
             _inventoryManager = FindObjectOfType<InventoryManager>();
@@ -168,6 +175,57 @@ public class Extraction : MonoBehaviour
         if (other.CompareTag("Tool"))
         {
             TakeDamage();
+        }
+    }
+
+    #endregion
+
+    #region ISaveable
+
+    private string GetHierarchyPath()
+    {
+        Transform current = transform;
+        string path = current.name;
+        while (current.parent != null)
+        {
+            current = current.parent;
+            path = current.name + "/" + path;
+        }
+        return $"{GetType().Name}_{path}";
+    }
+
+    public string GetObjectId()
+    {
+        return objectID;
+    }
+
+    public WorldObjectData GetSaveData()
+    {
+        return new WorldObjectData
+        {
+            objectId = GetObjectId(),
+            objectType = "Extraction",
+            health = _currentHealth,
+            isDead = _isDying,
+            isRespawning = _isRespawning,
+            respawnTimer = _respawnTimer
+        };
+    }
+
+    public void LoadData(WorldObjectData data)
+    {
+        _currentHealth = (int)data.health;
+        _isDying = data.isDead;
+        _isRespawning = data.isRespawning;
+        _respawnTimer = data.respawnTimer;
+
+        if (_isDying)
+        {
+            spriteRenderer.sprite = textures[0];
+        }
+        else if (textures.Length > 1)
+        {
+            spriteRenderer.sprite = textures[1];
         }
     }
 

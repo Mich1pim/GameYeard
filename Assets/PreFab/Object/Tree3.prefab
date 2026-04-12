@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b211f89c06231324eaa6258b974a829a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AppleTree
+  objectID: 
   spriteRenderer: {fileID: 1055385475720660533}
   inventoryManager: {fileID: 0}
   textures:
