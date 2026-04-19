@@ -17,7 +17,21 @@ public class PickupItem : MonoBehaviour, ISaveable
     {
         // Автогенерация ID
         if (string.IsNullOrEmpty(objectID))
-            objectID = GetHierarchyPath();
+        {
+            // Для динамически созданных объектов добавляем уникальный идентификатор
+            string hierarchyPath = GetHierarchyPath();
+            
+            // Если в имени есть "(Clone)", значит объект создан динамически
+            if (gameObject.name.Contains("(Clone)"))
+            {
+                // Добавляем позицию и время для уникальности
+                objectID = $"{hierarchyPath}_{transform.position.x:F2}_{transform.position.y:F2}_{Time.time:F3}";
+            }
+            else
+            {
+                objectID = hierarchyPath;
+            }
+        }
 
         // Если имя предмета не задано — берём из имени объекта
         if (string.IsNullOrEmpty(itemName))
@@ -38,6 +52,13 @@ public class PickupItem : MonoBehaviour, ISaveable
     private void Pickup()
     {
         if (_isCollected) return;
+
+        // Проверяем наличие ItemRegistry в сцене
+        if (ItemRegistry.Instance == null)
+        {
+            Debug.LogError($"[PickupItem] ItemRegistry not found in scene! Create GameObject with ItemRegistry component.");
+            return;
+        }
 
         Item item = ItemRegistry.FindItem(itemName);
         if (item == null)

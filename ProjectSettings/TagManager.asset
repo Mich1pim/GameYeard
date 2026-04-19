@@ -10,6 +10,7 @@ TagManager:
   - Tool
   - Axe
   - PickAxe
+  - Portal
   layers:
   - Default
   - TransparentFX
