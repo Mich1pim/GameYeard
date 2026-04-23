@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "word-document": {
+      "type": "stdio",
+      "command": "C:/Users/proho/AppData/Roaming/Python/Python314/Scripts/word_mcp_server.exe"
+    },
+    "local-server": {
+      "type": "sse",
+      "url": "http://127.0.0.1:8080/mcp"
+    },
+    "mcp-unity": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "C:/UnityGames/GameYear/Library/PackageCache/com.gamelovers.mcp-unity@6e5904b0eb78/Server~/build/index.js"
+      ]
+    },
+    "ai-game-developer": {
+      "type": "http",
+      "url": "http://localhost:24997"
+    }
+  }
+}

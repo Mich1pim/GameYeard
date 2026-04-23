@@ -118,6 +118,14 @@ public class GameSaveLoader : MonoBehaviour
         player.coin = data.playerData.coins;
         Debug.Log($"[GameSaveLoader] Позиция игрока: {player.transform.position}");
 
+        // Применяем здоровье
+        PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+        if (playerHealth != null && data.playerData.health > 0)
+        {
+            playerHealth.SetHealth(data.playerData.health);
+            Debug.Log($"[GameSaveLoader] Здоровье: {data.playerData.health}");
+        }
+
         // Применяем время
         if (data.timeData != null)
         {
@@ -133,10 +141,26 @@ public class GameSaveLoader : MonoBehaviour
             LoadInventory(data, invManager);
         }
 
+        // Применяем погоду
+        if (data.weatherData != null)
+        {
+            WeatherManager weather = FindObjectOfType<WeatherManager>();
+            if (weather != null)
+                weather.LoadData(data.weatherData);
+        }
+
         // Применяем мир (ресурсы, объекты)
         if (data.worldData != null && data.worldData.objects != null)
         {
             LoadWorld(data, invManager);
+        }
+
+        // Применяем слаймов (только если сейчас ночь)
+        if (data.slimeData != null && data.slimeData.Length > 0)
+        {
+            SlimeSpawner spawner = FindObjectOfType<SlimeSpawner>();
+            if (spawner != null)
+                spawner.LoadSlimes(data.slimeData);
         }
 
         Debug.Log("[GameSaveLoader] === СОХРАНЕНИЕ ЗАГРУЖЕНО ===");
@@ -216,29 +240,13 @@ public class GameSaveLoader : MonoBehaviour
     {
         Debug.Log($"[GameSaveLoader] Spawning pickup: {data.itemName} at ({data.posX}, {data.posY}), count={(int)data.health}");
 
-        Item item = ItemRegistry.FindItem(data.itemName);
-        if (item == null)
-        {
-            Debug.LogWarning($"[GameSaveLoader] Item '{data.itemName}' NOT FOUND in registry!");
-            return;
-        }
-
         GameObject prefab = FindPickupPrefab(data.itemName);
-
         if (prefab == null)
         {
-            Debug.LogWarning($"[GameSaveLoader] Prefab for '{data.itemName}' NOT FOUND! Available prefabs:");
+            Debug.LogWarning($"[GameSaveLoader] Префаб '{data.itemName}' не найден! Добавь его в массив Pickup Prefabs на GameSaveLoader.");
             if (pickupPrefabs != null)
-            {
                 foreach (var p in pickupPrefabs)
-                {
-                    if (p != null) Debug.Log($"  - {p.name}");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("  pickupPrefabs array is null!");
-            }
+                    if (p != null) Debug.Log($"  Доступен: {p.name}");
             return;
         }
 
@@ -250,11 +258,11 @@ public class GameSaveLoader : MonoBehaviour
         {
             pickup.objectID = data.objectId;
             pickup.count = (int)data.health;
-            Debug.Log($"[GameSaveLoader] Spawned OK: {data.itemName} x{(int)data.health}");
+            Debug.Log($"[GameSaveLoader] Спавн OK: {data.itemName} x{(int)data.health}");
         }
         else
         {
-            Debug.LogError($"[GameSaveLoader] PickupItem component missing on prefab {data.itemName}!");
+            Debug.LogError($"[GameSaveLoader] На префабе '{data.itemName}' нет компонента PickupItem!");
         }
     }
 

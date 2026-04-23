@@ -20,9 +20,13 @@ public class GlobalTime : MonoBehaviour
     public Light2D spotLight;
     public TextMeshProUGUI time;
 
-    void Start()
+    void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
     }
     void Update()
     {

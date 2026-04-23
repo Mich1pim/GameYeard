@@ -140,6 +140,14 @@ public class Bed : UsingAllObject
         GlobalTime.Instance.days++;
         GlobalTime.Instance._Time();
 
+        // Восстанавливаем здоровье до максимума
+        if (PlayerHealth.Instance != null)
+            PlayerHealth.Instance.SetHealth(PlayerHealth.Instance.MaxHealth);
+
+        // Меняем погоду на новый день
+        if (WeatherManager.Instance != null)
+            WeatherManager.Instance.RollNewDay();
+
         Debug.Log($"Bed: Герой уснул и проснулся в {wakeUpHour:00}:00, день {GlobalTime.Instance.days}");
 
         // Небольшая пауза

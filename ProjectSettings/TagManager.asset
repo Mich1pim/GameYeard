@@ -11,6 +11,7 @@ TagManager:
   - Axe
   - PickAxe
   - Portal
+  - Eneme
   layers:
   - Default
   - TransparentFX

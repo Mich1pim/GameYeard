@@ -31,13 +31,17 @@ public class InventoryManager : MonoBehaviour
     public void Start()
     {
         ChangeSelectedSlot(0);
-        foreach (Item item in startItem)
+
+        // Стартовые предметы добавляем только в новой игре.
+        // При загрузке сохранения GameSaveLoader очищает инвентарь и
+        // восстанавливает его сам — добавлять сюда ничего не нужно.
+        bool isNewGame = PlayerPrefs.GetInt("new_game", 1) == 1;
+        if (isNewGame)
         {
-            AddItem(item);
-        }
-        foreach (Item item in startItemChest)
-        {
-            AddItemChest(item);
+            foreach (Item item in startItem)
+                AddItem(item);
+            foreach (Item item in startItemChest)
+                AddItemChest(item);
         }
     }
 

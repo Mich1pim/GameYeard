@@ -67,7 +67,8 @@ public class Bush : UsingAllObject, ISaveable
         if (_currentStage < GetMaxStageIndex())
         {
             float currentMinutes = GetCurrentMinutes();
-            if (currentMinutes >= _lastGrowthTimeMinutes + growthIntervalMinutes)
+            float effectiveInterval = growthIntervalMinutes / WeatherManager.GrowthMultiplier;
+            if (currentMinutes >= _lastGrowthTimeMinutes + effectiveInterval)
             {
                 GrowToNextStage();
                 _lastGrowthTimeMinutes = currentMinutes;

@@ -159,7 +159,7 @@ public class AppleTree : UsingAllObject, ISaveable
         if (_currentStage >= maxStageIndex)
             return;
 
-        _growthTimer += Time.deltaTime;
+        _growthTimer += Time.deltaTime * WeatherManager.GrowthMultiplier;
         if (_growthTimer >= growthInterval)
         {
             _currentStage++;

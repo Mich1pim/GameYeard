@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ai-game-developer__tool-list",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8080 --max-time 5)",
+      "mcp__word-document__get_document_info",
+      "mcp__word-document__get_document_outline",
+      "mcp__word-document__get_document_text",
+      "mcp__word-document__find_text_in_document",
+      "mcp__word-document__insert_line_or_paragraph_near_text",
+      "mcp__word-document__search_and_replace",
+      "mcp__ai-game-developer__scene-list-opened",
+      "mcp__ai-game-developer__scene-get-data",
+      "mcp__ai-game-developer__gameobject-find",
+      "mcp__ai-game-developer__gameobject-component-get",
+      "mcp__ai-game-developer__assets-refresh",
+      "mcp__ai-game-developer__script-execute",
+      "mcp__ai-game-developer__scene-save",
+      "mcp__ai-game-developer__screenshot-game-view",
+      "mcp__ai-game-developer__screenshot-scene-view",
+      "mcp__ai-game-developer__script-update-or-create",
+      "mcp__ai-game-developer__gameobject-component-add",
+      "mcp__ai-game-developer__gameobject-component-modify",
+      "mcp__ai-game-developer__scene-open",
+      "mcp__ai-game-developer__gameobject-modify",
+      "mcp__ai-game-developer__console-get-logs"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "word-document",
+    "ai-game-developer"
+  ],
+  "disabledMcpjsonServers": [
+    "local-server",
+    "mcp-unity"
+  ]
+}

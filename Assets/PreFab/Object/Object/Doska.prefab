@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7401403429796602703}
   - component: {fileID: 2415986600863355829}
-  - component: {fileID: 1627585806495778720}
   - component: {fileID: 7504188885575330254}
   - component: {fileID: -6042499101336597326}
   m_Layer: 0
@@ -94,19 +93,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &1627585806495778720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8847530954994748927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40290c1029140d244abcad46d9986f74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Looting
-  itemToPickUp: {fileID: 11400000, guid: ce2a7450b303137478df3d0a0def2ba4, type: 2}
 --- !u!60 &7504188885575330254
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -174,6 +160,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed5fb5eea2ee5ed45b19212ce41b5ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  itemName: 
+  itemName: Docka
   count: 1
   objectID: 

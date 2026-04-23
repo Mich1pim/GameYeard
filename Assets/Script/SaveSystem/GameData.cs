@@ -8,6 +8,22 @@ public class GameData
     public InventoryData inventoryData;
     public TimeData timeData;
     public WorldData worldData;
+    public WeatherData weatherData;
+    public SlimeSpawnData[] slimeData;
+}
+
+[Serializable]
+public class WeatherData
+{
+    public int weatherType;    // WeatherType enum как int
+    public int lastWeatherDay;
+}
+
+[Serializable]
+public class SlimeSpawnData
+{
+    public float posX;
+    public float posY;
 }
 
 [Serializable]
@@ -16,6 +32,7 @@ public class PlayerData
     public float positionX;
     public float positionY;
     public int coins;
+    public int health;
 }
 
 [Serializable]

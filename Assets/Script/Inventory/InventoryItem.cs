@@ -24,6 +24,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private Transform splitRemainderParent;
     private Vector3 splitRemainderLocalScale;
 
+    // Какая кнопка начала текущее перетаскивание; -1 = не перетаскивается
+    private PointerEventData.InputButton _activeDragButton = (PointerEventData.InputButton)(-1);
+    private bool IsDragging => (int)_activeDragButton != -1;
+
     // Запоминаем слот крафта при начале перетаскивания
     // (в OnDrop предмет уже на Canvas и GetComponentInParent вернёт null)
     [HideInInspector] public CraftSlot originCraftSlot;
@@ -62,6 +66,15 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             return;
         }
 
+        // Если уже перетаскивается другой кнопкой — игнорируем
+        if (IsDragging) return;
+
+        // Принимаем только ЛКМ и ПКМ
+        if (eventData.button != PointerEventData.InputButton.Left &&
+            eventData.button != PointerEventData.InputButton.Right)
+            return;
+
+        _activeDragButton = eventData.button;
         isRightClickDrag = (eventData.button == PointerEventData.InputButton.Right);
         dropSuccess = false;
         splitRemainder = null;
@@ -77,6 +90,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (parentCanvas == null)
         {
             Debug.LogError("InventoryItem: Canvas не найден!");
+            _activeDragButton = (PointerEventData.InputButton)(-1);
             return;
         }
 
@@ -126,6 +140,8 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnDrag(PointerEventData eventData)
     {
+        // Реагируем только на кнопку, начавшую перетаскивание
+        if (!IsDragging || eventData.button != _activeDragButton) return;
         if (parentCanvas == null) return;
 
         // Для Screen Space - Overlay canvas камера = null
@@ -152,6 +168,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // Реагируем только на кнопку, начавшую перетаскивание
+        if (!IsDragging || eventData.button != _activeDragButton) return;
+
+        _activeDragButton = (PointerEventData.InputButton)(-1);
         image.raycastTarget = true;
 
         if (isRightClickDrag)

@@ -171,6 +171,8 @@ public class SaveManager : MonoBehaviour
             Player.Instance.coin = data.playerData.coins;
             Debug.Log($"[SaveManager] Player: pos=({data.playerData.positionX},{data.playerData.positionY}) coins={data.playerData.coins}");
         }
+        if (PlayerHealth.Instance != null && data.playerData != null && data.playerData.health > 0)
+            PlayerHealth.Instance.SetHealth(data.playerData.health);
 
         // Время
         if (GlobalTime.Instance != null && data.timeData != null)
@@ -227,6 +229,14 @@ public class SaveManager : MonoBehaviour
             Debug.Log($"[SaveManager] World: loaded {data.worldData.objects.Length} objects");
         }
 
+        // Погода
+        if (data.weatherData != null && WeatherManager.Instance != null)
+            WeatherManager.Instance.LoadData(data.weatherData);
+
+        // Слаймы
+        if (data.slimeData != null && SlimeSpawner.Instance != null)
+            SlimeSpawner.Instance.LoadSlimes(data.slimeData);
+
         Debug.Log("[SaveManager] Game data applied successfully");
     }
 
@@ -246,6 +256,8 @@ public class SaveManager : MonoBehaviour
             pData.positionY = Player.Instance.transform.position.y;
             pData.coins = Player.Instance.coin;
         }
+        if (PlayerHealth.Instance != null)
+            pData.health = PlayerHealth.Instance.CurrentHealth;
 
         // Время
         TimeData tData = new TimeData();
@@ -333,12 +345,20 @@ public class SaveManager : MonoBehaviour
             Debug.Log($"[SaveManager] Saving world object: {saveable.GetObjectId()} ({saveable.GetType().Name})");
         }
 
+        // Погода
+        WeatherData wData = WeatherManager.Instance != null ? WeatherManager.Instance.GetSaveData() : null;
+
+        // Слаймы
+        SlimeSpawnData[] slimeData = SlimeSpawner.Instance != null ? SlimeSpawner.Instance.GetSaveData() : null;
+
         GameData data = new GameData
         {
             playerData = pData,
             inventoryData = new InventoryData { slots = invSlots.ToArray() },
             timeData = tData,
-            worldData = new WorldData { objects = worldObjs.ToArray() }
+            worldData = new WorldData { objects = worldObjs.ToArray() },
+            weatherData = wData,
+            slimeData = slimeData
         };
 
         return data;

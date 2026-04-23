@@ -150,7 +150,7 @@ MonoBehaviour:
   - {fileID: -5031486422384086316, guid: 85515b503afd53745a97761e984cd56f, type: 3}
   - {fileID: -4483405589367954294, guid: 85515b503afd53745a97761e984cd56f, type: 3}
   - {fileID: 3904590873319227916, guid: 85515b503afd53745a97761e984cd56f, type: 3}
-  spawnPrefabCoin: {fileID: 8484565541269048068, guid: f2c8e85d67f22d447b5938a8af10ea1c, type: 3}
+  spawnPrefabCoin: {fileID: 8484565541269048068, guid: 637ac13f1d8f6b8449bef1aacd7a458d, type: 3}
   spawnPrefabLoot: {fileID: 2965910062730280880, guid: e289a7efc785c87498d5d129c1a4d3f7, type: 3}
   spawnPrefabApple: {fileID: 4976986502535444910, guid: 50addadd0033f364b839c612ac6c8dd9, type: 3}
   growthInterval: 2
