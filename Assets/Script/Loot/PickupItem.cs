@@ -11,6 +11,7 @@ public class PickupItem : MonoBehaviour, ISaveable
     public int count = 1;                           // Количество (публичный для сохранения)
     public string objectID;                         // Уникальный ID для сохранения (публичный)
 
+    public string ItemName => itemName;
     private bool _isCollected = false;
 
     void Awake()

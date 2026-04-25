@@ -28,6 +28,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private PointerEventData.InputButton _activeDragButton = (PointerEventData.InputButton)(-1);
     private bool IsDragging => (int)_activeDragButton != -1;
 
+    // Флаг для CursorManager — true пока любой предмет перетаскивается
+    public static bool AnyDragging { get; private set; }
+
     // Запоминаем слот крафта при начале перетаскивания
     // (в OnDrop предмет уже на Canvas и GetComponentInParent вернёт null)
     [HideInInspector] public CraftSlot originCraftSlot;
@@ -76,6 +79,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         _activeDragButton = eventData.button;
         isRightClickDrag = (eventData.button == PointerEventData.InputButton.Right);
+        AnyDragging = true;
         dropSuccess = false;
         splitRemainder = null;
         splitRemainderParent = null;
@@ -172,6 +176,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (!IsDragging || eventData.button != _activeDragButton) return;
 
         _activeDragButton = (PointerEventData.InputButton)(-1);
+        AnyDragging = false;
         image.raycastTarget = true;
 
         if (isRightClickDrag)

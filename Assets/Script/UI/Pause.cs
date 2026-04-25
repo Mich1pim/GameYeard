@@ -68,6 +68,7 @@ public class Pause : MonoBehaviour
         if (SaveManager.Instance != null)
         {
             SaveManager.Instance.SaveGame();
+            SaveFeedback.Instance?.Show();
         }
         else
         {

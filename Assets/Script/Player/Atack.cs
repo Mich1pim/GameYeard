@@ -19,14 +19,14 @@ public class Atack : MonoBehaviour
 
         bool isAttacking = Input.GetMouseButton(0);
         animator.SetBool(attackBoolName, isAttacking);
-        if (isAttacking == true)
-        {
+
+        bool hasTool = ItemsUsing.Instance != null &&
+                       (ItemsUsing.Instance.IsAxe() || ItemsUsing.Instance.IsPickAxe());
+
+        if (isAttacking && hasTool)
             Player.Instance.moveSpeed = 0;
-        }
         else
-        {
             Player.Instance.moveSpeed = 1.75f;
-        }
     }
 
     public void DisableInput()

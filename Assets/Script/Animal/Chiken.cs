@@ -14,6 +14,7 @@ public class Chiken : MonoBehaviour
     [SerializeField] private int eggsPerSpawn = 1;
     [SerializeField] private Vector2 spawnOffset = new Vector2(0, 0.5f);
     [SerializeField] private float spawnRadius = 1.5f;
+    [SerializeField] private int maxEggsOnMap = 8;
 
     [Header("Animation Settings")]
     [SerializeField] private float animationDuration = 0.3f; // как долго держать спрайт кладки
@@ -23,8 +24,9 @@ public class Chiken : MonoBehaviour
     #region Private Fields
 
     private float _spawnTimer;
-    private Sprite _originalSprite;   // запоминаем исходный спрайт
+    private Sprite _originalSprite;
     private bool _isAnimating;
+    private string _eggItemName;
 
     #endregion
 
@@ -36,7 +38,16 @@ public class Chiken : MonoBehaviour
             spriteRenderer = GetComponent<SpriteRenderer>();
         
         if (eggPrefab == null)
+        {
             Debug.LogError($"Chiken на объекте {gameObject.name}: eggPrefab не назначен!");
+        }
+        else
+        {
+            var pickup = eggPrefab.GetComponent<PickupItem>();
+            _eggItemName = pickup != null ? pickup.ItemName : eggPrefab.name;
+            if (string.IsNullOrEmpty(_eggItemName))
+                _eggItemName = eggPrefab.name;
+        }
         
         // Запоминаем исходный спрайт (если есть текстуры и спрайт-рендерер)
         if (spriteRenderer != null && spriteRenderer.sprite != null)
@@ -59,9 +70,24 @@ public class Chiken : MonoBehaviour
 
     #region Egg Laying
 
+    private int CountEggsOnMap()
+    {
+        int count = 0;
+        foreach (var p in FindObjectsOfType<PickupItem>())
+        {
+            string name = p.ItemName;
+            if (string.IsNullOrEmpty(name))
+                name = p.gameObject.name.Replace(" (Clone)", "");
+            if (name == _eggItemName)
+                count++;
+        }
+        return count;
+    }
+
     private void LayEggs()
     {
         if (eggPrefab == null) return;
+        if (CountEggsOnMap() >= maxEggsOnMap) return;
         
         // Если есть второй спрайт (textures[1]) — проигрываем анимацию кладки
         if (textures != null && textures.Length > 1 && textures[1] != null)
