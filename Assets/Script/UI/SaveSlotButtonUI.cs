@@ -19,7 +19,11 @@ public class SaveSlotButtonUI : MonoBehaviour
         if (deleteButton == null)
             deleteButton = transform.Find("DeleteButton")?.GetComponent<Button>();
 
-        deleteButton?.onClick.AddListener(OnDeleteClick);
+        if (deleteButton != null)
+        {
+            deleteButton.onClick.AddListener(OnDeleteClick);
+            deleteButton.gameObject.SetActive(false);
+        }
     }
 
     public void Refresh(int slotIndex, bool isSaveMode)

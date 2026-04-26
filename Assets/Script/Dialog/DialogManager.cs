@@ -35,6 +35,8 @@ public class DialogManager : MonoBehaviour
     private readonly List<GameObject> _choiceButtons = new List<GameObject>();
     private readonly List<RectTransform> _choiceRects = new List<RectTransform>();
 
+    public int LastChoiceIndex { get; private set; } = -1;
+
     private void Awake()
     {
         Instance = this;
@@ -74,7 +76,7 @@ public class DialogManager : MonoBehaviour
                 Camera cam = dialogPanel.GetComponentInParent<Canvas>()?.worldCamera;
                 if (RectTransformUtility.RectangleContainsScreenPoint(_choiceRects[i], Input.mousePosition, cam))
                 {
-                    OnChoiceSelected();
+                    OnChoiceSelected(i);
                     return;
                 }
             }
@@ -122,15 +124,17 @@ public class DialogManager : MonoBehaviour
             var tmp = btnGo.GetComponentInChildren<TextMeshProUGUI>();
             if (tmp != null) tmp.text = choice;
             var btn = btnGo.GetComponent<Button>();
-            if (btn != null) btn.onClick.AddListener(OnChoiceSelected);
+            int capturedIndex = _choiceButtons.Count - 1;
+            if (btn != null) btn.onClick.AddListener(() => OnChoiceSelected(capturedIndex));
             var rect = btnGo.GetComponent<RectTransform>();
             if (rect != null) _choiceRects.Add(rect);
         }
     }
 
-    private void OnChoiceSelected()
+    private void OnChoiceSelected(int index = 0)
     {
         if (!_awaitingChoice) return;
+        LastChoiceIndex = index;
         ClearChoices();
         _awaitingChoice = false;
         Advance();

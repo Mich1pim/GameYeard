@@ -83,6 +83,8 @@ public class WorldObjectData
     public float posX;
     public float posY;
     public string itemName;
+    // Для квестов
+    public int questState;
 }
 
 public interface ISaveable

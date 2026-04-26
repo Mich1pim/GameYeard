@@ -40,6 +40,8 @@ public class ShopInteraction : MonoBehaviour
         public int price;
     }
 
+    public bool interactionEnabled = true;
+
     private bool _isShopOpen = false;
     private Transform _playerTransform;
     private bool _isPlayerNearby = false;
@@ -177,7 +179,7 @@ public class ShopInteraction : MonoBehaviour
                 hintObject.SetActive(_isPlayerNearby);
             }
 
-            if (_isPlayerNearby && Input.GetKeyDown(interactionKey))
+            if (interactionEnabled && _isPlayerNearby && Input.GetKeyDown(interactionKey))
             {
                 if (_isShopOpen)
                     CloseShop();
