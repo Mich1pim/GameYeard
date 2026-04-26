@@ -27,6 +27,7 @@ public class UsingAllObject : MonoBehaviour
     protected virtual void Update()
     {
         if (_playerTransform == null) return;
+        if (DialogManager.Instance != null && DialogManager.Instance.IsActive) return;
 
         distance = Vector3.Distance(_playerTransform.position, transform.position);
         if (Input.GetKeyDown(interactionKey) && distance < interactionDistance)

@@ -16,6 +16,7 @@ public class Atack : MonoBehaviour
     private void Update()
     {
         if (!_inputEnabled) return;
+        if (DialogManager.Instance != null && DialogManager.Instance.IsActive) return;
 
         bool isAttacking = Input.GetMouseButton(0);
         animator.SetBool(attackBoolName, isAttacking);
