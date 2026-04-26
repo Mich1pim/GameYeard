@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
 
     [Header("Save System")]
     public GameObject loadButton;           // Кнопка "Загрузить" (показывается если есть сохранение)
+    public SaveSlotsPanelUI loadSlotsPanel; // Панель выбора слота для загрузки
 
     void Start()
     {
@@ -43,10 +44,10 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
-        PlayerPrefs.SetInt("new_game", 0);
-        PlayerPrefs.Save();
-
-        SceneManager.LoadScene("MainMap");
+        if (loadSlotsPanel != null)
+            loadSlotsPanel.OpenForLoad();
+        else
+            Debug.LogError("[MainMenu] loadSlotsPanel не назначен!");
     }
 
     public void OpenSettings()

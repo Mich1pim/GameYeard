@@ -20,7 +20,8 @@ public class GameSaveLoader : MonoBehaviour
 
     void Start()
     {
-        _savePath = Path.Combine(Application.persistentDataPath, "game_save.json");
+        int slot = PlayerPrefs.GetInt("load_slot", 1);
+        _savePath = Path.Combine(Application.persistentDataPath, $"game_save_slot_{slot}.json");
 
         if (loadOnStart)
         {

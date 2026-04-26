@@ -6,16 +6,12 @@ using UnityEngine;
 /// </summary>
 public class SaveGameButton : MonoBehaviour
 {
-    public void SaveGame()
+    public void OpenSaveSlotsPanel()
     {
-        if (SaveManager.Instance != null)
-        {
-            SaveManager.Instance.SaveGame();
-            Debug.Log("[SaveGameButton] Game saved!");
-        }
+        var panel = FindObjectOfType<SaveSlotsPanelUI>(true);
+        if (panel != null)
+            panel.OpenForSave();
         else
-        {
-            Debug.LogError("[SaveGameButton] SaveManager not found!");
-        }
+            Debug.LogError("[SaveGameButton] SaveSlotsPanelUI not found!");
     }
 }

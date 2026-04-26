@@ -9,14 +9,16 @@ public class Pause : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (saveSlotsPanel != null && saveSlotsPanel.gameObject.activeSelf)
+            {
+                saveSlotsPanel.Close();
+                return;
+            }
+
             if (PauseGame)
-            {
                 Resume();
-            }
             else
-            {
                 PauseM();
-            }
         }
     }
 
@@ -61,18 +63,14 @@ public class Pause : MonoBehaviour
     /// <summary>
     /// Сохранить игру (вызывается из кнопки в меню паузы)
     /// </summary>
-    public void SaveGame()
-    {
-        Debug.Log("[Pause] SaveGame called!");
+    [Header("Save Slots Panel")]
+    public SaveSlotsPanelUI saveSlotsPanel;
 
-        if (SaveManager.Instance != null)
-        {
-            SaveManager.Instance.SaveGame();
-            SaveFeedback.Instance?.Show();
-        }
+    public void OpenSaveSlotsPanel()
+    {
+        if (saveSlotsPanel != null)
+            saveSlotsPanel.OpenForSave();
         else
-        {
-            Debug.LogError("[Pause] SaveManager.Instance is null!");
-        }
+            Debug.LogError("[Pause] saveSlotsPanel не назначен!");
     }
 }
