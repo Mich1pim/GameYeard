@@ -47,6 +47,10 @@ public class CursorManager : MonoBehaviour
 
     CursorState GetDesiredState()
     {
+        // Защита: если ни одна кнопка не зажата — drag невозможен
+        if (!Input.GetMouseButton(0) && !Input.GetMouseButton(1))
+            InventoryItem.ResetDragState();
+
         // Приоритет 1: перетаскивание предмета или зажатая ЛКМ
         if (InventoryItem.AnyDragging || Input.GetMouseButton(0))
             return CursorState.Holding;

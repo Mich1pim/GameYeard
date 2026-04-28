@@ -31,6 +31,8 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     // Флаг для CursorManager — true пока любой предмет перетаскивается
     public static bool AnyDragging { get; private set; }
 
+    public static void ResetDragState() => AnyDragging = false;
+
     // Запоминаем слот крафта при начале перетаскивания
     // (в OnDrop предмет уже на Canvas и GetComponentInParent вернёт null)
     [HideInInspector] public CraftSlot originCraftSlot;

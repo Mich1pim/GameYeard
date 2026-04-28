@@ -30,8 +30,9 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             if (CanAcceptItems(draggedItem.item, draggedItem.count))
             {
                 AddItems(draggedItem.item, draggedItem.count);
-                Destroy(draggedItem.gameObject);
                 draggedItem.dropSuccess = true;
+                InventoryItem.ResetDragState();
+                Destroy(draggedItem.gameObject);
             }
             // Если нельзя принять — dropSuccess остаётся false, предмет вернётся в OnEndDrag
             NotifyCraftSlot();

@@ -25,7 +25,11 @@
       "mcp__ai-game-developer__gameobject-modify",
       "mcp__ai-game-developer__console-get-logs",
       "mcp__ai-game-developer__gameobject-duplicate",
-      "Bash(unity-mcp-cli run-tool *)"
+      "Bash(unity-mcp-cli run-tool *)",
+      "mcp__word-document__copy_document",
+      "mcp__word-document__get_paragraph_text_from_document",
+      "mcp__word-document__delete_paragraph",
+      "mcp__word-document__insert_header_near_text"
     ]
   },
   "enabledMcpjsonServers": [
