@@ -46,15 +46,15 @@ public class SaveSlotsPanelUI : MonoBehaviour
     public void OpenForSave()
     {
         _isSaveMode = true;
-        RefreshSlots();
         gameObject.SetActive(true);
+        RefreshSlots();
     }
 
     public void OpenForLoad()
     {
         _isSaveMode = false;
-        RefreshSlots();
         gameObject.SetActive(true);
+        RefreshSlots();
     }
 
     public void Close()

@@ -2715,7 +2715,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 42.199913, y: 22.5}
+  m_AnchoredPosition: {x: 26, y: 22.5}
   m_SizeDelta: {x: 167.868, y: -3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &554448627
@@ -2766,7 +2766,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0421\u0438\u0441\u0442\u0435\u043C\u043D\u044B\u0439 "
+  m_Text: "\u0418\u0433\u0440\u043E\u0432\u043E\u0439"
 --- !u!222 &554448629
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5889,6 +5889,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1331037461}
+  - component: {fileID: 1331037464}
   - component: {fileID: 1331037463}
   - component: {fileID: 1331037462}
   m_Layer: 5
@@ -5932,6 +5933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026681e610e37984e8c5f8641b9c3337, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursorSettingToggle
+  _toggle: {fileID: 0}
 --- !u!114 &1331037463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5978,20 +5980,21 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1614772280}
-        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
-        m_MethodName: SetFullscreen
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 1
+--- !u!114 &1331037464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331037460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 026681e610e37984e8c5f8641b9c3337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursorSettingToggle
+  _toggle: {fileID: 1331037463}
 --- !u!1 &1332624955
 GameObject:
   m_ObjectHideFlags: 0
@@ -7643,7 +7646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Settings
   resolutionDropdown: {fileID: 1413897385}
-  fullscreenToggle: {fileID: 0}
+  fullscreenToggle: {fileID: 942280259}
 --- !u!1 &1624029913
 GameObject:
   m_ObjectHideFlags: 0

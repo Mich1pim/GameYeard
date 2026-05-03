@@ -45,7 +45,7 @@ public class Settings : MonoBehaviour
         if (fullscreenToggle != null)
         {
             // Устанавливаем начальное состояние Toggle
-            fullscreenToggle.isOn = Screen.fullScreen;
+            fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
 
             // Подписываемся на изменения
             fullscreenToggle.onValueChanged.AddListener(OnFullscreenToggleChanged);
@@ -271,7 +271,7 @@ public class Settings : MonoBehaviour
             // Обновляем Toggle если он есть
             if (fullscreenToggle != null)
             {
-                fullscreenToggle.isOn = savedFullscreen;
+                fullscreenToggle.SetIsOnWithoutNotify(savedFullscreen);
             }
 
             Debug.Log($"Загружен fullscreen: {savedFullscreen}");

@@ -1,0 +1,8 @@
+{
+  "enabledMcpjsonServers": [
+    "word-document",
+    "local-server",
+    "mcp-unity",
+    "ai-game-developer"
+  ]
+}
