@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             id="Crafting_Definitions"
+             targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <collaboration id="Collab_Crafting">
+    <participant id="Pool_Game" name="Процесс создания предмета" processRef="Proc_Crafting"/>
+  </collaboration>
+
+  <process id="Proc_Crafting" isExecutable="false">
+    <laneSet id="LaneSet_1">
+      <lane id="Lane_Player" name="Игрок">
+        <flowNodeRef>Start_1</flowNodeRef>
+        <flowNodeRef>Task_PlaceResources</flowNodeRef>
+        <flowNodeRef>Task_ClickResult</flowNodeRef>
+      </lane>
+      <lane id="Lane_Craft" name="Система создания предметов">
+        <flowNodeRef>Task_ReadGrid</flowNodeRef>
+        <flowNodeRef>Task_Normalize</flowNodeRef>
+        <flowNodeRef>Task_SearchRecipe</flowNodeRef>
+        <flowNodeRef>GW_RecipeFound</flowNodeRef>
+        <flowNodeRef>Task_ClearResult1</flowNodeRef>
+        <flowNodeRef>Task_ShowResult</flowNodeRef>
+        <flowNodeRef>GW_IsBusy</flowNodeRef>
+        <flowNodeRef>End_Ignored</flowNodeRef>
+        <flowNodeRef>GW_RecipeValid</flowNodeRef>
+        <flowNodeRef>End_Cancelled</flowNodeRef>
+        <flowNodeRef>Task_ClearResult2</flowNodeRef>
+        <flowNodeRef>Task_ConsumeIngredients</flowNodeRef>
+        <flowNodeRef>Task_RefreshRecipe</flowNodeRef>
+        <flowNodeRef>GW_Repeat</flowNodeRef>
+        <flowNodeRef>Task_ShowRepeat</flowNodeRef>
+        <flowNodeRef>End_Done</flowNodeRef>
+      </lane>
+      <lane id="Lane_Inventory" name="Инвентарь">
+        <flowNodeRef>Task_CheckSpace</flowNodeRef>
+        <flowNodeRef>GW_HasSpace</flowNodeRef>
+        <flowNodeRef>End_Full</flowNodeRef>
+        <flowNodeRef>Task_AddItem</flowNodeRef>
+      </lane>
+    </laneSet>
+
+    <startEvent id="Start_1" name="Открытие&#10;окна создания&#10;предметов"/>
+
+    <userTask id="Task_PlaceResources" name="Размещение ресурсов&#10;в ячейки сетки 3×3"/>
+
+    <serviceTask id="Task_ReadGrid" name="Считывание содержимого&#10;всех 9 ячеек сетки"/>
+    <serviceTask id="Task_Normalize" name="Нормализация&#10;расположения&#10;ресурсов в сетке"/>
+    <serviceTask id="Task_SearchRecipe" name="Поиск совпадения&#10;с шаблонами&#10;рецептов"/>
+
+    <exclusiveGateway id="GW_RecipeFound" name="Рецепт&#10;найден?"/>
+
+    <serviceTask id="Task_ClearResult1" name="Очистка&#10;слота результата"/>
+    <serviceTask id="Task_ShowResult" name="Отображение&#10;результата&#10;в слоте"/>
+
+    <userTask id="Task_ClickResult" name="Нажатие на&#10;слот результата"/>
+
+    <exclusiveGateway id="GW_IsBusy" name="Операция&#10;уже&#10;выполняется?"/>
+    <endEvent id="End_Ignored" name="Запрос&#10;проигнорирован"/>
+
+    <exclusiveGateway id="GW_RecipeValid" name="Рецепт и&#10;результат&#10;доступны?"/>
+    <endEvent id="End_Cancelled" name="Создание&#10;отменено"/>
+
+    <serviceTask id="Task_CheckSpace" name="Проверка наличия&#10;свободного места&#10;в инвентаре"/>
+    <exclusiveGateway id="GW_HasSpace" name="Место в&#10;инвентаре есть?"/>
+    <endEvent id="End_Full" name="Инвентарь&#10;переполнен"/>
+    <serviceTask id="Task_AddItem" name="Добавление&#10;предмета&#10;в инвентарь"/>
+
+    <serviceTask id="Task_ClearResult2" name="Очистка&#10;слота результата"/>
+    <serviceTask id="Task_ConsumeIngredients" name="Списание&#10;использованных&#10;ресурсов из сетки"/>
+    <serviceTask id="Task_RefreshRecipe" name="Проверка&#10;возможности&#10;повторного создания"/>
+    <exclusiveGateway id="GW_Repeat" name="Повторное&#10;создание&#10;возможно?"/>
+    <serviceTask id="Task_ShowRepeat" name="Отображение&#10;повторного&#10;результата&#10;в слоте"/>
+    <endEvent id="End_Done" name="Предмет создан,&#10;сетка обновлена"/>
+
+    <!-- Sequence Flows -->
+    <sequenceFlow id="SF_01" sourceRef="Start_1" targetRef="Task_PlaceResources"/>
+    <sequenceFlow id="SF_02" sourceRef="Task_PlaceResources" targetRef="Task_ReadGrid"/>
+    <sequenceFlow id="SF_03" sourceRef="Task_ReadGrid" targetRef="Task_Normalize"/>
+    <sequenceFlow id="SF_04" sourceRef="Task_Normalize" targetRef="Task_SearchRecipe"/>
+    <sequenceFlow id="SF_05" sourceRef="Task_SearchRecipe" targetRef="GW_RecipeFound"/>
+    <sequenceFlow id="SF_06" sourceRef="GW_RecipeFound" targetRef="Task_ClearResult1" name="Нет"/>
+    <sequenceFlow id="SF_07" sourceRef="GW_RecipeFound" targetRef="Task_ShowResult" name="Да"/>
+    <sequenceFlow id="SF_08" sourceRef="Task_ClearResult1" targetRef="Task_PlaceResources"/>
+    <sequenceFlow id="SF_09" sourceRef="Task_ShowResult" targetRef="Task_ClickResult"/>
+    <sequenceFlow id="SF_10" sourceRef="Task_ClickResult" targetRef="GW_IsBusy"/>
+    <sequenceFlow id="SF_11" sourceRef="GW_IsBusy" targetRef="End_Ignored" name="Да"/>
+    <sequenceFlow id="SF_12" sourceRef="GW_IsBusy" targetRef="GW_RecipeValid" name="Нет"/>
+    <sequenceFlow id="SF_13" sourceRef="GW_RecipeValid" targetRef="End_Cancelled" name="Нет"/>
+    <sequenceFlow id="SF_14" sourceRef="GW_RecipeValid" targetRef="Task_CheckSpace" name="Да"/>
+    <sequenceFlow id="SF_15" sourceRef="Task_CheckSpace" targetRef="GW_HasSpace"/>
+    <sequenceFlow id="SF_16" sourceRef="GW_HasSpace" targetRef="End_Full" name="Нет"/>
+    <sequenceFlow id="SF_17" sourceRef="GW_HasSpace" targetRef="Task_AddItem" name="Да"/>
+    <sequenceFlow id="SF_18" sourceRef="Task_AddItem" targetRef="Task_ClearResult2"/>
+    <sequenceFlow id="SF_19" sourceRef="Task_ClearResult2" targetRef="Task_ConsumeIngredients"/>
+    <sequenceFlow id="SF_20" sourceRef="Task_ConsumeIngredients" targetRef="Task_RefreshRecipe"/>
+    <sequenceFlow id="SF_21" sourceRef="Task_RefreshRecipe" targetRef="GW_Repeat"/>
+    <sequenceFlow id="SF_22" sourceRef="GW_Repeat" targetRef="Task_ShowRepeat" name="Да"/>
+    <sequenceFlow id="SF_23" sourceRef="GW_Repeat" targetRef="End_Done" name="Нет"/>
+    <sequenceFlow id="SF_24" sourceRef="Task_ShowRepeat" targetRef="Task_ClickResult"/>
+  </process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collab_Crafting">
+
+      <!-- Pool -->
+      <bpmndi:BPMNShape id="Shape_Pool" bpmnElement="Pool_Game" isHorizontal="true">
+        <dc:Bounds x="30" y="20" width="2010" height="710"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane: Игрок (y=20 to y=180) -->
+      <bpmndi:BPMNShape id="Shape_Lane_Player" bpmnElement="Lane_Player" isHorizontal="true">
+        <dc:Bounds x="60" y="20" width="1980" height="160"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane: Система создания предметов (y=180 to y=550) -->
+      <bpmndi:BPMNShape id="Shape_Lane_Craft" bpmnElement="Lane_Craft" isHorizontal="true">
+        <dc:Bounds x="60" y="180" width="1980" height="370"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane: Инвентарь (y=550 to y=730) -->
+      <bpmndi:BPMNShape id="Shape_Lane_Inventory" bpmnElement="Lane_Inventory" isHorizontal="true">
+        <dc:Bounds x="60" y="550" width="1980" height="180"/>
+      </bpmndi:BPMNShape>
+
+      <!-- ===== PLAYER LANE elements (center y=100) ===== -->
+
+      <!-- Start Event: center (115, 100) -->
+      <bpmndi:BPMNShape id="Shape_Start_1" bpmnElement="Start_1">
+        <dc:Bounds x="97" y="82" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="74" y="125" width="82" height="54"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Task PlaceResources: center (265, 100) -->
+      <bpmndi:BPMNShape id="Shape_Task_PlaceResources" bpmnElement="Task_PlaceResources">
+        <dc:Bounds x="185" y="60" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task ClickResult: center (1080, 100) -->
+      <bpmndi:BPMNShape id="Shape_Task_ClickResult" bpmnElement="Task_ClickResult">
+        <dc:Bounds x="1010" y="60" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- ===== CRAFT LANE elements ===== -->
+      <!-- Main flow row: center y=390 (craft lane spans 180-550, center=365; main row slightly below) -->
+      <!-- Upper flow row (consume/refresh/repeat): center y=240 -->
+
+      <!-- Task ReadGrid: center (450, 390) -->
+      <bpmndi:BPMNShape id="Shape_Task_ReadGrid" bpmnElement="Task_ReadGrid">
+        <dc:Bounds x="380" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task Normalize: center (590, 390) -->
+      <bpmndi:BPMNShape id="Shape_Task_Normalize" bpmnElement="Task_Normalize">
+        <dc:Bounds x="560" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task SearchRecipe: center (760, 390) -->
+      <bpmndi:BPMNShape id="Shape_Task_SearchRecipe" bpmnElement="Task_SearchRecipe">
+        <dc:Bounds x="740" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- GW RecipeFound: center (930, 390) -->
+      <bpmndi:BPMNShape id="Shape_GW_RecipeFound" bpmnElement="GW_RecipeFound" isMarkerVisible="true">
+        <dc:Bounds x="905" y="365" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="900" y="420" width="60" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Task ClearResult1 (no recipe path): center (930, 490) -->
+      <bpmndi:BPMNShape id="Shape_Task_ClearResult1" bpmnElement="Task_ClearResult1">
+        <dc:Bounds x="870" y="460" width="120" height="70"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task ShowResult: center (1080, 390) -->
+      <bpmndi:BPMNShape id="Shape_Task_ShowResult" bpmnElement="Task_ShowResult">
+        <dc:Bounds x="1010" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- GW IsBusy: center (1230, 390) -->
+      <bpmndi:BPMNShape id="Shape_GW_IsBusy" bpmnElement="GW_IsBusy" isMarkerVisible="true">
+        <dc:Bounds x="1205" y="365" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1196" y="420" width="68" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- End Ignored: center (1230, 490) -->
+      <bpmndi:BPMNShape id="Shape_End_Ignored" bpmnElement="End_Ignored">
+        <dc:Bounds x="1212" y="472" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1196" y="514" width="68" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- GW RecipeValid: center (1360, 390) -->
+      <bpmndi:BPMNShape id="Shape_GW_RecipeValid" bpmnElement="GW_RecipeValid" isMarkerVisible="true">
+        <dc:Bounds x="1335" y="365" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1322" y="420" width="76" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- End Cancelled: center (1360, 490) -->
+      <bpmndi:BPMNShape id="Shape_End_Cancelled" bpmnElement="End_Cancelled">
+        <dc:Bounds x="1342" y="472" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1325" y="514" width="70" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Task ClearResult2: center (1760, 390) -->
+      <bpmndi:BPMNShape id="Shape_Task_ClearResult2" bpmnElement="Task_ClearResult2">
+        <dc:Bounds x="1700" y="350" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Upper craft sub-row: center y=240 -->
+      <!-- Task ConsumeIngredients: center (1640, 240) -->
+      <bpmndi:BPMNShape id="Shape_Task_ConsumeIngredients" bpmnElement="Task_ConsumeIngredients">
+        <dc:Bounds x="1565" y="200" width="150" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task RefreshRecipe: center (1440, 240) -->
+      <bpmndi:BPMNShape id="Shape_Task_RefreshRecipe" bpmnElement="Task_RefreshRecipe">
+        <dc:Bounds x="1360" y="200" width="150" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- GW Repeat: center (1250, 240) -->
+      <bpmndi:BPMNShape id="Shape_GW_Repeat" bpmnElement="GW_Repeat" isMarkerVisible="true">
+        <dc:Bounds x="1225" y="215" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1210" y="270" width="80" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Task ShowRepeat: center (1080, 240) -->
+      <bpmndi:BPMNShape id="Shape_Task_ShowRepeat" bpmnElement="Task_ShowRepeat">
+        <dc:Bounds x="1010" y="200" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- End Done: center (1880, 240) -->
+      <bpmndi:BPMNShape id="Shape_End_Done" bpmnElement="End_Done">
+        <dc:Bounds x="1862" y="222" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1840" y="264" width="80" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ===== INVENTORY LANE elements (center y=640) ===== -->
+
+      <!-- Task CheckSpace: center (1450, 640) -->
+      <bpmndi:BPMNShape id="Shape_Task_CheckSpace" bpmnElement="Task_CheckSpace">
+        <dc:Bounds x="1380" y="600" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- GW HasSpace: center (1590, 640) -->
+      <bpmndi:BPMNShape id="Shape_GW_HasSpace" bpmnElement="GW_HasSpace" isMarkerVisible="true">
+        <dc:Bounds x="1565" y="615" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1554" y="670" width="72" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- End Full: center (1590, 530) — at craft/inventory boundary -->
+      <bpmndi:BPMNShape id="Shape_End_Full" bpmnElement="End_Full">
+        <dc:Bounds x="1572" y="512" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1556" y="554" width="68" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Task AddItem: center (1760, 640) -->
+      <bpmndi:BPMNShape id="Shape_Task_AddItem" bpmnElement="Task_AddItem">
+        <dc:Bounds x="1690" y="600" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- ===== SEQUENCE FLOW EDGES ===== -->
+
+      <!-- SF_01: Start_1 → Task_PlaceResources -->
+      <bpmndi:BPMNEdge id="Edge_SF_01" bpmnElement="SF_01">
+        <di:waypoint x="133" y="100"/>
+        <di:waypoint x="185" y="100"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_02: Task_PlaceResources → Task_ReadGrid (cross-lane: player→craft) -->
+      <bpmndi:BPMNEdge id="Edge_SF_02" bpmnElement="SF_02">
+        <di:waypoint x="345" y="100"/>
+        <di:waypoint x="365" y="100"/>
+        <di:waypoint x="365" y="390"/>
+        <di:waypoint x="380" y="390"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_03: Task_ReadGrid → Task_Normalize -->
+      <bpmndi:BPMNEdge id="Edge_SF_03" bpmnElement="SF_03">
+        <di:waypoint x="520" y="390"/>
+        <di:waypoint x="560" y="390"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_04: Task_Normalize → Task_SearchRecipe -->
+      <bpmndi:BPMNEdge id="Edge_SF_04" bpmnElement="SF_04">
+        <di:waypoint x="700" y="390"/>
+        <di:waypoint x="740" y="390"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_05: Task_SearchRecipe → GW_RecipeFound -->
+      <bpmndi:BPMNEdge id="Edge_SF_05" bpmnElement="SF_05">
+        <di:waypoint x="880" y="390"/>
+        <di:waypoint x="905" y="390"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_06: GW_RecipeFound → Task_ClearResult1 (Нет, goes down) -->
+      <bpmndi:BPMNEdge id="Edge_SF_06" bpmnElement="SF_06">
+        <di:waypoint x="930" y="415"/>
+        <di:waypoint x="930" y="460"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="938" y="430" width="22" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_07: GW_RecipeFound → Task_ShowResult (Да) -->
+      <bpmndi:BPMNEdge id="Edge_SF_07" bpmnElement="SF_07">
+        <di:waypoint x="955" y="390"/>
+        <di:waypoint x="1010" y="390"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="974" y="372" width="18" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_08: Task_ClearResult1 → Task_PlaceResources (loop back, goes below and left) -->
+      <bpmndi:BPMNEdge id="Edge_SF_08" bpmnElement="SF_08">
+        <di:waypoint x="870" y="495"/>
+        <di:waypoint x="265" y="495"/>
+        <di:waypoint x="265" y="140"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_09: Task_ShowResult → Task_ClickResult (cross-lane: craft→player) -->
+      <bpmndi:BPMNEdge id="Edge_SF_09" bpmnElement="SF_09">
+        <di:waypoint x="1080" y="350"/>
+        <di:waypoint x="1080" y="140"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_10: Task_ClickResult → GW_IsBusy (cross-lane: player→craft) -->
+      <bpmndi:BPMNEdge id="Edge_SF_10" bpmnElement="SF_10">
+        <di:waypoint x="1150" y="140"/>
+        <di:waypoint x="1150" y="350"/>
+        <di:waypoint x="1205" y="390"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_11: GW_IsBusy → End_Ignored (Да, goes down) -->
+      <bpmndi:BPMNEdge id="Edge_SF_11" bpmnElement="SF_11">
+        <di:waypoint x="1230" y="415"/>
+        <di:waypoint x="1230" y="472"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1238" y="436" width="18" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_12: GW_IsBusy → GW_RecipeValid (Нет) -->
+      <bpmndi:BPMNEdge id="Edge_SF_12" bpmnElement="SF_12">
+        <di:waypoint x="1255" y="390"/>
+        <di:waypoint x="1335" y="390"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1283" y="372" width="22" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_13: GW_RecipeValid → End_Cancelled (Нет, goes down) -->
+      <bpmndi:BPMNEdge id="Edge_SF_13" bpmnElement="SF_13">
+        <di:waypoint x="1360" y="415"/>
+        <di:waypoint x="1360" y="472"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1368" y="436" width="22" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_14: GW_RecipeValid → Task_CheckSpace (Да, goes down to inventory) -->
+      <bpmndi:BPMNEdge id="Edge_SF_14" bpmnElement="SF_14">
+        <di:waypoint x="1385" y="390"/>
+        <di:waypoint x="1450" y="390"/>
+        <di:waypoint x="1450" y="600"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1406" y="372" width="18" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_15: Task_CheckSpace → GW_HasSpace -->
+      <bpmndi:BPMNEdge id="Edge_SF_15" bpmnElement="SF_15">
+        <di:waypoint x="1520" y="640"/>
+        <di:waypoint x="1565" y="640"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_16: GW_HasSpace → End_Full (Нет, goes up) -->
+      <bpmndi:BPMNEdge id="Edge_SF_16" bpmnElement="SF_16">
+        <di:waypoint x="1590" y="615"/>
+        <di:waypoint x="1590" y="548"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1598" y="574" width="22" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_17: GW_HasSpace → Task_AddItem (Да) -->
+      <bpmndi:BPMNEdge id="Edge_SF_17" bpmnElement="SF_17">
+        <di:waypoint x="1615" y="640"/>
+        <di:waypoint x="1690" y="640"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1640" y="622" width="18" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_18: Task_AddItem → Task_ClearResult2 (cross-lane: inventory→craft) -->
+      <bpmndi:BPMNEdge id="Edge_SF_18" bpmnElement="SF_18">
+        <di:waypoint x="1760" y="600"/>
+        <di:waypoint x="1760" y="430"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_19: Task_ClearResult2 → Task_ConsumeIngredients (goes up in craft lane) -->
+      <bpmndi:BPMNEdge id="Edge_SF_19" bpmnElement="SF_19">
+        <di:waypoint x="1760" y="350"/>
+        <di:waypoint x="1760" y="240"/>
+        <di:waypoint x="1715" y="240"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_20: Task_ConsumeIngredients → Task_RefreshRecipe (goes left) -->
+      <bpmndi:BPMNEdge id="Edge_SF_20" bpmnElement="SF_20">
+        <di:waypoint x="1565" y="240"/>
+        <di:waypoint x="1510" y="240"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_21: Task_RefreshRecipe → GW_Repeat -->
+      <bpmndi:BPMNEdge id="Edge_SF_21" bpmnElement="SF_21">
+        <di:waypoint x="1360" y="240"/>
+        <di:waypoint x="1275" y="240"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_22: GW_Repeat → Task_ShowRepeat (Да, goes left) -->
+      <bpmndi:BPMNEdge id="Edge_SF_22" bpmnElement="SF_22">
+        <di:waypoint x="1225" y="240"/>
+        <di:waypoint x="1150" y="240"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1174" y="222" width="18" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_23: GW_Repeat → End_Done (Нет, goes right) -->
+      <bpmndi:BPMNEdge id="Edge_SF_23" bpmnElement="SF_23">
+        <di:waypoint x="1275" y="240"/>
+        <di:waypoint x="1862" y="240"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1556" y="222" width="22" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+
+      <!-- SF_24: Task_ShowRepeat → Task_ClickResult (cross-lane: craft→player, loop back) -->
+      <bpmndi:BPMNEdge id="Edge_SF_24" bpmnElement="SF_24">
+        <di:waypoint x="1010" y="240"/>
+        <di:waypoint x="985" y="240"/>
+        <di:waypoint x="985" y="100"/>
+        <di:waypoint x="1010" y="100"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
