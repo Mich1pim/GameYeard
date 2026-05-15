@@ -29,7 +29,10 @@
       "mcp__word-document__copy_document",
       "mcp__word-document__get_paragraph_text_from_document",
       "mcp__word-document__delete_paragraph",
-      "mcp__word-document__insert_header_near_text"
+      "mcp__word-document__insert_header_near_text",
+      "mcp__word-document__create_document",
+      "mcp__word-document__add_heading",
+      "mcp__word-document__add_paragraph"
     ]
   },
   "enabledMcpjsonServers": [
